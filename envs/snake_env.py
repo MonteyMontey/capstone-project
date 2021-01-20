@@ -1,6 +1,6 @@
 import numpy as np
 from enum import Enum
-from typing import List, Tuple, Set
+from typing import List, Tuple
 
 
 class Action(Enum):

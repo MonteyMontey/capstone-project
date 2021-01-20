@@ -59,6 +59,9 @@ class Snake:
 
 class SnakeEnv:
     def __init__(self, grid_size=7):
+        if grid_size % 2 == 0 or grid_size < 3:
+            raise ValueError("grid_size must be odd and greater than or equal to 3")
+
         self.grid_size = grid_size
         self._grid = self._make_grid()
 

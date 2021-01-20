@@ -1,5 +1,6 @@
 import numpy as np
 from enum import Enum
+from typing import List, Tuple, Set
 
 
 class Action(Enum):
@@ -21,18 +22,18 @@ class SnakeVision(Enum):
 
 
 class Snake:
-    def __init__(self, cells, vel=Action.UP):
+    def __init__(self, cells: List[Tuple], vel: Action = Action.UP):
         self.cells = cells
         self._last_action = vel
 
         self.cell_lookup = set()
         self.cell_lookup.update(cells)
 
-    def move(self, action):
+    def move(self, action: Action):
         self.grow(action)
         self.cell_lookup.remove(self.cells.pop())
 
-    def grow(self, action):
+    def grow(self, action: Action):
         next_cell = self.next_cell(action)
 
         self.cells.insert(0, next_cell)
@@ -41,7 +42,7 @@ class Snake:
         if not self._is_180_turn(action):
             self._last_action = action
 
-    def next_cell(self, action):
+    def next_cell(self, action: Action):
         if self._is_180_turn(action):
             action = self._last_action
 
@@ -50,7 +51,7 @@ class Snake:
 
         return next_cell
 
-    def _is_180_turn(self, action):
+    def _is_180_turn(self, action: Action):
         return (action == Action.UP and self._last_action == Action.DOWN) or \
                (action == Action.DOWN and self._last_action == Action.UP) or \
                (action == Action.LEFT and self._last_action == Action.RIGHT) or \
@@ -58,7 +59,7 @@ class Snake:
 
 
 class SnakeEnv:
-    def __init__(self, grid_size=7):
+    def __init__(self, grid_size: int = 7):
         if grid_size % 2 == 0 or grid_size < 3:
             raise ValueError("grid_size must be odd and greater than or equal to 3")
 
@@ -76,7 +77,7 @@ class SnakeEnv:
 
         return self._get_state()
 
-    def step(self, action):
+    def step(self, action: Action):
         next_cell = self._snake.next_cell(action)
 
         if self._is_snake(next_cell) or self._is_wall(next_cell):
@@ -125,10 +126,10 @@ class SnakeEnv:
 
         return arr
 
-    def _is_wall(self, cell):
+    def _is_wall(self, cell: Tuple):
         return True if cell[0] >= self.grid_size or cell[1] >= self.grid_size or cell[0] < 0 or cell[1] < 0 else False
 
-    def _is_snake(self, cell):
+    def _is_snake(self, cell: Tuple):
         return True if cell in self._snake.cell_lookup else False
 
     def _spawn_snake(self):

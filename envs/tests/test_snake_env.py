@@ -52,12 +52,12 @@ class TestSnakeEnv(unittest.TestCase):
     def test_surrounding_cell_state(self):
         env = SnakeEnv(7, 1)
         env.reset()
-        surrounding_cell_state = env._surrounding_cell_state()
+        surrounding_cell_state = env._surrounding_cell_state(env._snake.cells[0])
         self.assertCountEqual(surrounding_cell_state, [0, 0, 0, 0, 1, 0, 0, 1, 0])
 
         env = SnakeEnv(7, 2)
         env.reset()
-        surrounding_cell_state = env._surrounding_cell_state()
+        surrounding_cell_state = env._surrounding_cell_state(env._snake.cells[0])
         self.assertCountEqual(surrounding_cell_state,
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0])
 

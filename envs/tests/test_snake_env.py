@@ -1,5 +1,6 @@
+import numpy as np
 import unittest
-from envs.snake_env import SnakeEnv, Action, SnakeVision
+from envs.snake_env import SnakeEnv, Action
 
 
 class TestSnakeEnv(unittest.TestCase):
@@ -48,12 +49,17 @@ class TestSnakeEnv(unittest.TestCase):
         env.step(Action.UP)
         self.assertTrue(env._is_snake((3, 2)))
 
-    def test_dist_to_snake(self):
-        env = SnakeEnv(7)
+    def test_surrounding_cell_state(self):
+        env = SnakeEnv(7, 1)
         env.reset()
-        self.assertEqual(3 / 7, env._dist_to_snake((0, 0), SnakeVision.DIAG_DOWN_RIGHT))
-        self.assertEqual(2 / 7, env._dist_to_snake((3, 1), SnakeVision.DOWN))
-        self.assertEqual(1, env._dist_to_snake((0, 6), SnakeVision.RIGHT))
+        surrounding_cell_state = env._surrounding_cell_state()
+        self.assertCountEqual(surrounding_cell_state, [0, 0, 0, 0, 1, 0, 0, 1, 0])
+
+        env = SnakeEnv(7, 2)
+        env.reset()
+        surrounding_cell_state = env._surrounding_cell_state()
+        self.assertCountEqual(surrounding_cell_state,
+                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0])
 
 
 if __name__ == "__main__":

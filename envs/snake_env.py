@@ -10,17 +10,6 @@ class Action(Enum):
     LEFT = (-1, 0)
 
 
-class SnakeVision(Enum):
-    UP = (0, -1)
-    DIAG_UP_RIGHT = (1, -1)
-    RIGHT = (1, 0)
-    DIAG_DOWN_RIGHT = (1, 1)
-    DOWN = (0, 1)
-    DIAG_DOWN_LEFT = (-1, 1)
-    LEFT = (-1, 0)
-    DIAG_UP_LEFT = (-1, -1)
-
-
 class Snake:
     def __init__(self, cells: List[Tuple], vel: Action = Action.UP):
         self.cells = cells
@@ -59,12 +48,16 @@ class Snake:
 
 
 class SnakeEnv:
-    def __init__(self, grid_size: int = 7):
+    def __init__(self, grid_size: int = 7, vision: int = 2):
         if grid_size % 2 == 0 or grid_size < 3:
             raise ValueError("grid_size must be odd and greater than or equal to 3")
+        if vision < 0:
+            raise ValueError("vision must be greater than or equal to 1")
 
         self.grid_size = grid_size
         self._grid = self._make_grid()
+
+        self.vision = vision
 
         self._score = None
         self._snake = None
@@ -100,17 +93,9 @@ class SnakeEnv:
         snake_head = self._snake.cells[0]
 
         food_distance_x, food_distance_y = np.subtract(snake_head, self._food_cell)
-        food_data = [food_distance_x / self.grid_size, food_distance_y / self.grid_size]
+        food_position = [food_distance_x / self.grid_size, food_distance_y / self.grid_size]
 
-        snake_pos_x = (snake_head[1] + 1) / self.grid_size
-        snake_pos_y = (snake_head[0] + 1) / self.grid_size
-        wall_data = [snake_pos_x, snake_pos_y]
-
-        snake_data = []
-        for vision in SnakeVision:
-            snake_data.append(self._dist_to_snake(snake_head, vision))
-
-        return np.array(food_data + wall_data + snake_data, dtype=np.float32)
+        return np.array(food_position + self._surrounding_cell_state(snake_head), dtype=np.float32)
 
     def screenshot(self):
         arr = np.zeros([self.grid_size, self.grid_size, 3], dtype=np.uint8)
@@ -132,6 +117,15 @@ class SnakeEnv:
     def _is_snake(self, cell: Tuple):
         return True if cell in self._snake.cell_lookup else False
 
+    def _surrounding_cell_state(self, snake_head):
+        surrounding_cells_state = []
+        for y in range(self.vision * 2 + 1):
+            for x in range(self.vision * 2 + 1):
+                cell = (snake_head[0] - self.vision + x, snake_head[1] - self.vision + y)
+                surrounding_cells_state.append(self._is_snake(cell) or self._is_wall(cell))
+
+        return surrounding_cells_state
+
     def _spawn_snake(self):
         snake_cells = []
         snake_x = self.grid_size // 2
@@ -143,16 +137,6 @@ class SnakeEnv:
     def _spawn_food(self):
         available_cells = list(self._grid.difference(self._snake.cell_lookup))
         self._food_cell = available_cells[np.random.choice(len(available_cells))]
-
-    def _dist_to_snake(self, pos, direction):
-        dist = 0
-        while True:
-            pos = pos[0] + direction.value[0], pos[1] + direction.value[1]
-            dist += 1
-            if self._is_snake(pos):
-                return dist / self.grid_size
-            if self._is_wall(pos):
-                return 1
 
     def _make_grid(self):
         grid = set()

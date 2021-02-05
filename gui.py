@@ -17,7 +17,8 @@ class Ui_GUI(object):
     def setupUi(self, GUI):
         if not GUI.objectName():
             GUI.setObjectName(u"GUI")
-        GUI.resize(789, 655)
+        GUI.setEnabled(True)
+        GUI.resize(800, 600)
         self.centralwidget = QWidget(GUI)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_4 = QGridLayout(self.centralwidget)
@@ -28,78 +29,106 @@ class Ui_GUI(object):
         self.rightVerticalLayout.setSpacing(6)
         self.rightVerticalLayout.setObjectName(u"rightVerticalLayout")
         self.rightVerticalLayout.setContentsMargins(-1, 0, -1, -1)
+        self.envGroupBox = QGroupBox(self.centralwidget)
+        self.envGroupBox.setObjectName(u"envGroupBox")
+        self.envGroupBox.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.envGroupBox.setFlat(False)
+        self.envGroupBox.setCheckable(False)
+        self.envGroupBox.setChecked(False)
+        self.verticalLayout_2 = QVBoxLayout(self.envGroupBox)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.envView = QGraphicsView(self.envGroupBox)
+        self.envView.setObjectName(u"envView")
+        self.envView.setFrameShape(QFrame.StyledPanel)
+        self.envView.setFrameShadow(QFrame.Sunken)
+        self.envView.setLineWidth(1)
+        self.envView.setMidLineWidth(0)
+
+        self.verticalLayout_2.addWidget(self.envView)
+
+
+        self.rightVerticalLayout.addWidget(self.envGroupBox)
+
         self.learningGraphGroupBox = QGroupBox(self.centralwidget)
         self.learningGraphGroupBox.setObjectName(u"learningGraphGroupBox")
-        self.learningGraphGroupBox.setCheckable(False)
-        self.learningGraphGroupBox.setChecked(False)
+        self.verticalLayout_3 = QVBoxLayout(self.learningGraphGroupBox)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.learningGraphView = QGraphicsView(self.learningGraphGroupBox)
+        self.learningGraphView.setObjectName(u"learningGraphView")
+        self.learningGraphView.setFrameShape(QFrame.StyledPanel)
+
+        self.verticalLayout_3.addWidget(self.learningGraphView)
+
 
         self.rightVerticalLayout.addWidget(self.learningGraphGroupBox)
-
-        self.environmentGroupBox = QGroupBox(self.centralwidget)
-        self.environmentGroupBox.setObjectName(u"environmentGroupBox")
-
-        self.rightVerticalLayout.addWidget(self.environmentGroupBox)
 
 
         self.gridLayout_4.addLayout(self.rightVerticalLayout, 0, 1, 1, 1)
 
         self.leftVerticalLayout = QVBoxLayout()
         self.leftVerticalLayout.setObjectName(u"leftVerticalLayout")
-        self.leftVerticalLayout.setContentsMargins(-1, 20, -1, -1)
+        self.leftVerticalLayout.setContentsMargins(-1, 0, -1, -1)
+        self.configGroupBox = QGroupBox(self.centralwidget)
+        self.configGroupBox.setObjectName(u"configGroupBox")
+        self.verticalLayout = QVBoxLayout(self.configGroupBox)
+        self.verticalLayout.setSpacing(6)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.configFormLayout = QFormLayout()
         self.configFormLayout.setObjectName(u"configFormLayout")
         self.configFormLayout.setVerticalSpacing(10)
         self.configFormLayout.setContentsMargins(-1, 0, 0, -1)
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
+        self.envLabel = QLabel(self.configGroupBox)
+        self.envLabel.setObjectName(u"envLabel")
 
-        self.configFormLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+        self.configFormLayout.setWidget(0, QFormLayout.LabelRole, self.envLabel)
 
-        self.label_2 = QLabel(self.centralwidget)
-        self.label_2.setObjectName(u"label_2")
+        self.envComboBox = QComboBox(self.configGroupBox)
+        self.envComboBox.addItem("")
+        self.envComboBox.addItem("")
+        self.envComboBox.addItem("")
+        self.envComboBox.setObjectName(u"envComboBox")
 
-        self.configFormLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
+        self.configFormLayout.setWidget(0, QFormLayout.FieldRole, self.envComboBox)
 
-        self.comboBox = QComboBox(self.centralwidget)
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.setObjectName(u"comboBox")
+        self.algLabel = QLabel(self.configGroupBox)
+        self.algLabel.setObjectName(u"algLabel")
 
-        self.configFormLayout.setWidget(0, QFormLayout.FieldRole, self.comboBox)
+        self.configFormLayout.setWidget(1, QFormLayout.LabelRole, self.algLabel)
 
-        self.comboBox_2 = QComboBox(self.centralwidget)
-        self.comboBox_2.addItem("")
-        self.comboBox_2.addItem("")
-        self.comboBox_2.addItem("")
-        self.comboBox_2.addItem("")
-        self.comboBox_2.setObjectName(u"comboBox_2")
+        self.algComboBox = QComboBox(self.configGroupBox)
+        self.algComboBox.addItem("")
+        self.algComboBox.addItem("")
+        self.algComboBox.addItem("")
+        self.algComboBox.addItem("")
+        self.algComboBox.setObjectName(u"algComboBox")
 
-        self.configFormLayout.setWidget(1, QFormLayout.FieldRole, self.comboBox_2)
-
-
-        self.leftVerticalLayout.addLayout(self.configFormLayout)
-
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setSpacing(10)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.pushButton_2 = QPushButton(self.centralwidget)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-
-        self.horizontalLayout_3.addWidget(self.pushButton_2)
-
-        self.pushButton = QPushButton(self.centralwidget)
-        self.pushButton.setObjectName(u"pushButton")
-
-        self.horizontalLayout_3.addWidget(self.pushButton)
-
-        self.pushButton_3 = QPushButton(self.centralwidget)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-
-        self.horizontalLayout_3.addWidget(self.pushButton_3)
+        self.configFormLayout.setWidget(1, QFormLayout.FieldRole, self.algComboBox)
 
 
-        self.leftVerticalLayout.addLayout(self.horizontalLayout_3)
+        self.verticalLayout.addLayout(self.configFormLayout)
+
+        self.buttonsHorizontalLayout = QHBoxLayout()
+        self.buttonsHorizontalLayout.setObjectName(u"buttonsHorizontalLayout")
+        self.stopButton = QPushButton(self.configGroupBox)
+        self.stopButton.setObjectName(u"stopButton")
+
+        self.buttonsHorizontalLayout.addWidget(self.stopButton)
+
+        self.pauseButton = QPushButton(self.configGroupBox)
+        self.pauseButton.setObjectName(u"pauseButton")
+
+        self.buttonsHorizontalLayout.addWidget(self.pauseButton)
+
+        self.startButton = QPushButton(self.configGroupBox)
+        self.startButton.setObjectName(u"startButton")
+
+        self.buttonsHorizontalLayout.addWidget(self.startButton)
+
+
+        self.verticalLayout.addLayout(self.buttonsHorizontalLayout)
+
+
+        self.leftVerticalLayout.addWidget(self.configGroupBox)
 
 
         self.gridLayout_4.addLayout(self.leftVerticalLayout, 0, 0, 1, 1)
@@ -113,7 +142,7 @@ class Ui_GUI(object):
         GUI.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(GUI)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 789, 21))
+        self.menubar.setGeometry(QRect(0, 0, 800, 21))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuEdit = QMenu(self.menubar)
@@ -127,28 +156,30 @@ class Ui_GUI(object):
         self.menubar.addAction(self.menuAbout.menuAction())
 
         self.retranslateUi(GUI)
+        self.envComboBox.activated.connect(self.learningGraphGroupBox.repaint)
 
         QMetaObject.connectSlotsByName(GUI)
     # setupUi
 
     def retranslateUi(self, GUI):
         GUI.setWindowTitle(QCoreApplication.translate("GUI", u"Capstone Project", None))
-        self.learningGraphGroupBox.setTitle(QCoreApplication.translate("GUI", u"Environment", None))
-        self.environmentGroupBox.setTitle(QCoreApplication.translate("GUI", u"Learning Graph", None))
-        self.label.setText(QCoreApplication.translate("GUI", u"Environment: ", None))
-        self.label_2.setText(QCoreApplication.translate("GUI", u"RL-Algorithm: ", None))
-        self.comboBox.setItemText(0, QCoreApplication.translate("GUI", u"Snake", None))
-        self.comboBox.setItemText(1, QCoreApplication.translate("GUI", u"Breakout", None))
-        self.comboBox.setItemText(2, QCoreApplication.translate("GUI", u"Pong", None))
+        self.envGroupBox.setTitle(QCoreApplication.translate("GUI", u"Environment", None))
+        self.learningGraphGroupBox.setTitle(QCoreApplication.translate("GUI", u"Learning Graph", None))
+        self.configGroupBox.setTitle(QCoreApplication.translate("GUI", u"Configuration", None))
+        self.envLabel.setText(QCoreApplication.translate("GUI", u"Environment: ", None))
+        self.envComboBox.setItemText(0, QCoreApplication.translate("GUI", u"Snake", None))
+        self.envComboBox.setItemText(1, QCoreApplication.translate("GUI", u"Breakout", None))
+        self.envComboBox.setItemText(2, QCoreApplication.translate("GUI", u"Pong", None))
 
-        self.comboBox_2.setItemText(0, QCoreApplication.translate("GUI", u"DQN", None))
-        self.comboBox_2.setItemText(1, QCoreApplication.translate("GUI", u"DDDQN", None))
-        self.comboBox_2.setItemText(2, QCoreApplication.translate("GUI", u"DDPG", None))
-        self.comboBox_2.setItemText(3, QCoreApplication.translate("GUI", u"SAC", None))
+        self.algLabel.setText(QCoreApplication.translate("GUI", u"RL-Algorithm: ", None))
+        self.algComboBox.setItemText(0, QCoreApplication.translate("GUI", u"DQN", None))
+        self.algComboBox.setItemText(1, QCoreApplication.translate("GUI", u"DDDQN", None))
+        self.algComboBox.setItemText(2, QCoreApplication.translate("GUI", u"DDPG", None))
+        self.algComboBox.setItemText(3, QCoreApplication.translate("GUI", u"SAC", None))
 
-        self.pushButton_2.setText(QCoreApplication.translate("GUI", u"Start", None))
-        self.pushButton.setText(QCoreApplication.translate("GUI", u"Pause", None))
-        self.pushButton_3.setText(QCoreApplication.translate("GUI", u"Stop", None))
+        self.stopButton.setText(QCoreApplication.translate("GUI", u"Start", None))
+        self.pauseButton.setText(QCoreApplication.translate("GUI", u"Pause", None))
+        self.startButton.setText(QCoreApplication.translate("GUI", u"Stop", None))
         self.menuFile.setTitle(QCoreApplication.translate("GUI", u"File", None))
         self.menuEdit.setTitle(QCoreApplication.translate("GUI", u"Edit", None))
         self.menuAbout.setTitle(QCoreApplication.translate("GUI", u"Documentation", None))

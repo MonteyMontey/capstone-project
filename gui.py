@@ -19,8 +19,20 @@ class Ui_GUI(object):
             GUI.setObjectName(u"GUI")
         GUI.setEnabled(True)
         GUI.resize(800, 600)
+        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(GUI.sizePolicy().hasHeightForWidth())
+        GUI.setSizePolicy(sizePolicy)
+        GUI.setMinimumSize(QSize(800, 600))
+        GUI.setMaximumSize(QSize(800, 600))
         self.centralwidget = QWidget(GUI)
         self.centralwidget.setObjectName(u"centralwidget")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        self.centralwidget.setSizePolicy(sizePolicy1)
         self.gridLayout_4 = QGridLayout(self.centralwidget)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_4.setHorizontalSpacing(20)
@@ -109,20 +121,20 @@ class Ui_GUI(object):
 
         self.buttonsHorizontalLayout = QHBoxLayout()
         self.buttonsHorizontalLayout.setObjectName(u"buttonsHorizontalLayout")
-        self.stopButton = QPushButton(self.configGroupBox)
-        self.stopButton.setObjectName(u"stopButton")
+        self.startButton = QPushButton(self.configGroupBox)
+        self.startButton.setObjectName(u"startButton")
 
-        self.buttonsHorizontalLayout.addWidget(self.stopButton)
+        self.buttonsHorizontalLayout.addWidget(self.startButton)
 
         self.pauseButton = QPushButton(self.configGroupBox)
         self.pauseButton.setObjectName(u"pauseButton")
 
         self.buttonsHorizontalLayout.addWidget(self.pauseButton)
 
-        self.startButton = QPushButton(self.configGroupBox)
-        self.startButton.setObjectName(u"startButton")
+        self.stopButton = QPushButton(self.configGroupBox)
+        self.stopButton.setObjectName(u"stopButton")
 
-        self.buttonsHorizontalLayout.addWidget(self.startButton)
+        self.buttonsHorizontalLayout.addWidget(self.stopButton)
 
 
         self.verticalLayout.addLayout(self.buttonsHorizontalLayout)
@@ -137,9 +149,6 @@ class Ui_GUI(object):
         self.gridLayout_4.setColumnStretch(0, 3)
         self.gridLayout_4.setColumnStretch(1, 4)
         GUI.setCentralWidget(self.centralwidget)
-        self.statusbar = QStatusBar(GUI)
-        self.statusbar.setObjectName(u"statusbar")
-        GUI.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(GUI)
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 800, 21))
@@ -156,7 +165,6 @@ class Ui_GUI(object):
         self.menubar.addAction(self.menuAbout.menuAction())
 
         self.retranslateUi(GUI)
-        self.envComboBox.activated.connect(self.learningGraphGroupBox.repaint)
 
         QMetaObject.connectSlotsByName(GUI)
     # setupUi
@@ -177,9 +185,9 @@ class Ui_GUI(object):
         self.algComboBox.setItemText(2, QCoreApplication.translate("GUI", u"DDPG", None))
         self.algComboBox.setItemText(3, QCoreApplication.translate("GUI", u"SAC", None))
 
-        self.stopButton.setText(QCoreApplication.translate("GUI", u"Start", None))
+        self.startButton.setText(QCoreApplication.translate("GUI", u"Start", None))
         self.pauseButton.setText(QCoreApplication.translate("GUI", u"Pause", None))
-        self.startButton.setText(QCoreApplication.translate("GUI", u"Stop", None))
+        self.stopButton.setText(QCoreApplication.translate("GUI", u"Stop", None))
         self.menuFile.setTitle(QCoreApplication.translate("GUI", u"File", None))
         self.menuEdit.setTitle(QCoreApplication.translate("GUI", u"Edit", None))
         self.menuAbout.setTitle(QCoreApplication.translate("GUI", u"Documentation", None))

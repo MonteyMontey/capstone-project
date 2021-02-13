@@ -102,10 +102,52 @@ class Ui_GUI(object):
 
         self.configFormLayout.setWidget(0, QFormLayout.FieldRole, self.envComboBox)
 
+
+        self.verticalLayout.addLayout(self.configFormLayout)
+
+        self.envStackedWidget = QStackedWidget(self.configGroupBox)
+        self.envStackedWidget.setObjectName(u"envStackedWidget")
+        self.page = QWidget()
+        self.page.setObjectName(u"page")
+        self.formLayout = QFormLayout(self.page)
+        self.formLayout.setObjectName(u"formLayout")
+        self.label = QLabel(self.page)
+        self.label.setObjectName(u"label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+
+        self.spinBox = QSpinBox(self.page)
+        self.spinBox.setObjectName(u"spinBox")
+        self.spinBox.setMinimum(1)
+        self.spinBox.setMaximum(5)
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.spinBox)
+
+        self.envStackedWidget.addWidget(self.page)
+        self.page_2 = QWidget()
+        self.page_2.setObjectName(u"page_2")
+        self.formLayout_4 = QFormLayout(self.page_2)
+        self.formLayout_4.setObjectName(u"formLayout_4")
+        self.label_3 = QLabel(self.page_2)
+        self.label_3.setObjectName(u"label_3")
+
+        self.formLayout_4.setWidget(0, QFormLayout.LabelRole, self.label_3)
+
+        self.spinBox_2 = QSpinBox(self.page_2)
+        self.spinBox_2.setObjectName(u"spinBox_2")
+
+        self.formLayout_4.setWidget(0, QFormLayout.FieldRole, self.spinBox_2)
+
+        self.envStackedWidget.addWidget(self.page_2)
+
+        self.verticalLayout.addWidget(self.envStackedWidget)
+
+        self.formLayout_2 = QFormLayout()
+        self.formLayout_2.setObjectName(u"formLayout_2")
         self.algLabel = QLabel(self.configGroupBox)
         self.algLabel.setObjectName(u"algLabel")
 
-        self.configFormLayout.setWidget(1, QFormLayout.LabelRole, self.algLabel)
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.algLabel)
 
         self.algComboBox = QComboBox(self.configGroupBox)
         self.algComboBox.addItem("")
@@ -114,10 +156,38 @@ class Ui_GUI(object):
         self.algComboBox.addItem("")
         self.algComboBox.setObjectName(u"algComboBox")
 
-        self.configFormLayout.setWidget(1, QFormLayout.FieldRole, self.algComboBox)
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.algComboBox)
 
 
-        self.verticalLayout.addLayout(self.configFormLayout)
+        self.verticalLayout.addLayout(self.formLayout_2)
+
+        self.algStackedWidget = QStackedWidget(self.configGroupBox)
+        self.algStackedWidget.setObjectName(u"algStackedWidget")
+        self.page_3 = QWidget()
+        self.page_3.setObjectName(u"page_3")
+        self.algStackedWidget.addWidget(self.page_3)
+        self.page_4 = QWidget()
+        self.page_4.setObjectName(u"page_4")
+        self.formLayout_3 = QFormLayout(self.page_4)
+        self.formLayout_3.setObjectName(u"formLayout_3")
+        self.label_2 = QLabel(self.page_4)
+        self.label_2.setObjectName(u"label_2")
+
+        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.label_2)
+
+        self.doubleSpinBox = QDoubleSpinBox(self.page_4)
+        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
+        self.doubleSpinBox.setDecimals(5)
+        self.doubleSpinBox.setMinimum(0.000000000000000)
+        self.doubleSpinBox.setMaximum(1.000000000000000)
+        self.doubleSpinBox.setSingleStep(0.000100000000000)
+        self.doubleSpinBox.setValue(0.001000000000000)
+
+        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.doubleSpinBox)
+
+        self.algStackedWidget.addWidget(self.page_4)
+
+        self.verticalLayout.addWidget(self.algStackedWidget)
 
         self.buttonsHorizontalLayout = QHBoxLayout()
         self.buttonsHorizontalLayout.setObjectName(u"buttonsHorizontalLayout")
@@ -166,6 +236,10 @@ class Ui_GUI(object):
 
         self.retranslateUi(GUI)
 
+        self.envStackedWidget.setCurrentIndex(0)
+        self.algStackedWidget.setCurrentIndex(1)
+
+
         QMetaObject.connectSlotsByName(GUI)
     # setupUi
 
@@ -179,12 +253,15 @@ class Ui_GUI(object):
         self.envComboBox.setItemText(1, QCoreApplication.translate("GUI", u"Breakout", None))
         self.envComboBox.setItemText(2, QCoreApplication.translate("GUI", u"Pong", None))
 
+        self.label.setText(QCoreApplication.translate("GUI", u"Snake-Vision: ", None))
+        self.label_3.setText(QCoreApplication.translate("GUI", u"Paddle Size: ", None))
         self.algLabel.setText(QCoreApplication.translate("GUI", u"RL-Algorithm: ", None))
         self.algComboBox.setItemText(0, QCoreApplication.translate("GUI", u"DQN", None))
         self.algComboBox.setItemText(1, QCoreApplication.translate("GUI", u"DDDQN", None))
         self.algComboBox.setItemText(2, QCoreApplication.translate("GUI", u"DDPG", None))
         self.algComboBox.setItemText(3, QCoreApplication.translate("GUI", u"SAC", None))
 
+        self.label_2.setText(QCoreApplication.translate("GUI", u"Learning Rate: ", None))
         self.startButton.setText(QCoreApplication.translate("GUI", u"Start", None))
         self.pauseButton.setText(QCoreApplication.translate("GUI", u"Pause", None))
         self.stopButton.setText(QCoreApplication.translate("GUI", u"Stop", None))

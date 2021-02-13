@@ -1,5 +1,4 @@
 import sys
-import random
 import time
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QGraphicsScene
@@ -77,6 +76,16 @@ def change_env(selection):
     env.reset()
 
     update_display()
+    change_configs(selection)
+
+
+def change_configs(selection):
+    env_stacked_widget = window.ui.envStackedWidget
+
+    if selection == "Breakout":
+        env_stacked_widget.setCurrentIndex(1)
+    elif selection == "Snake":
+        env_stacked_widget.setCurrentIndex(0)
 
 
 def update_display():

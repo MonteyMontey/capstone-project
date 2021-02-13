@@ -12,6 +12,8 @@ from envs.snake_env import SnakeEnv, Action
 from envs.pong_env import PongEnv
 from envs.breakout_env import BreakoutEnv
 
+from rl_algorithms.dqn import DQNAgent
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -25,12 +27,36 @@ class Worker(QRunnable):
     def run(self):
         global env
 
-        done = False
-        while not done:
-            _, _, done, _ = env.step(random.choice(list(Action)))
-            update_display()
-            QApplication.processEvents()
-            time.sleep(1)
+        rl_algo = window.ui.algComboBox.currentText()
+        rl_agent = ALG_OBJECT_MAP[rl_algo](27, 64, 32, 4, 0.001, 0.999, 1, 1_000_000, 32)
+
+        for i in range(100):
+            done = False
+            state = env.reset()
+
+            while not done:
+                action = rl_agent.choose_action(state)
+
+                if action == 0:
+                    converted_action = Action.UP
+                elif action == 1:
+                    converted_action = Action.RIGHT
+                elif action == 2:
+                    converted_action = Action.DOWN
+                else:
+                    converted_action = Action.LEFT
+
+                state_, reward, done, score = env.step(converted_action)
+                score += reward
+
+                rl_agent.store_transition(state, action, reward, state_, done)
+                rl_agent.learn()
+
+                state = state_
+
+                update_display()
+                QApplication.processEvents()
+                time.sleep(0.1)
 
 
 @Slot()
@@ -70,6 +96,8 @@ def update_display():
 
 ENV_OBJECT_MAP = {"Snake": SnakeEnv, "Breakout": BreakoutEnv, "Pong": PongEnv}
 ENV_ZOOM_MAP = {"SnakeEnv": 30, "BreakoutEnv": 8, "PongEnv": 20}
+
+ALG_OBJECT_MAP = {"DQN": DQNAgent}
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

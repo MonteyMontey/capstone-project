@@ -55,7 +55,7 @@ class Worker(QRunnable):
 
                 update_display()
                 QApplication.processEvents()
-                time.sleep(0.1)
+                time.sleep(0.2)
 
 
 @Slot()
@@ -76,16 +76,30 @@ def change_env(selection):
     env.reset()
 
     update_display()
-    change_configs(selection)
+    change_env_configs(selection)
 
 
-def change_configs(selection):
+@Slot(str)
+def change_alg(selection):
+    change_alg_configs(selection)
+
+
+def change_env_configs(selection):
     env_stacked_widget = window.ui.envStackedWidget
 
     if selection == "Breakout":
         env_stacked_widget.setCurrentIndex(1)
     elif selection == "Snake":
         env_stacked_widget.setCurrentIndex(0)
+
+
+def change_alg_configs(selection):
+    alg_stacked_widget = window.ui.algStackedWidget
+
+    if selection == "DQN":
+        alg_stacked_widget.setCurrentIndex(1)
+    else:
+        alg_stacked_widget.setCurrentIndex(0)
 
 
 def update_display():
@@ -122,6 +136,8 @@ if __name__ == "__main__":
     change_env(env_selection)
 
     window.ui.envComboBox.currentTextChanged.connect(change_env)
+
+    window.ui.algComboBox.currentTextChanged.connect(change_alg)
 
     window.ui.startButton.clicked.connect(start_training)
 

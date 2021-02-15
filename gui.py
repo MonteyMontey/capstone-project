@@ -116,12 +116,29 @@ class Ui_GUI(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
 
-        self.spinBox = QSpinBox(self.page)
-        self.spinBox.setObjectName(u"spinBox")
-        self.spinBox.setMinimum(1)
-        self.spinBox.setMaximum(5)
+        self.gridSizeComboBox = QComboBox(self.page)
+        self.gridSizeComboBox.addItem("")
+        self.gridSizeComboBox.addItem("")
+        self.gridSizeComboBox.addItem("")
+        self.gridSizeComboBox.addItem("")
+        self.gridSizeComboBox.setObjectName(u"gridSizeComboBox")
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.spinBox)
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.gridSizeComboBox)
+
+        self.label_4 = QLabel(self.page)
+        self.label_4.setObjectName(u"label_4")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_4)
+
+        self.snakeVisionComboBox = QComboBox(self.page)
+        self.snakeVisionComboBox.addItem("")
+        self.snakeVisionComboBox.addItem("")
+        self.snakeVisionComboBox.addItem("")
+        self.snakeVisionComboBox.addItem("")
+        self.snakeVisionComboBox.addItem("")
+        self.snakeVisionComboBox.setObjectName(u"snakeVisionComboBox")
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.snakeVisionComboBox)
 
         self.envStackedWidget.addWidget(self.page)
         self.page_2 = QWidget()
@@ -141,6 +158,13 @@ class Ui_GUI(object):
         self.envStackedWidget.addWidget(self.page_2)
 
         self.verticalLayout.addWidget(self.envStackedWidget)
+
+        self.line = QFrame(self.configGroupBox)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.HLine)
+        self.line.setFrameShadow(QFrame.Sunken)
+
+        self.verticalLayout.addWidget(self.line)
 
         self.formLayout_2 = QFormLayout()
         self.formLayout_2.setObjectName(u"formLayout_2")
@@ -175,15 +199,109 @@ class Ui_GUI(object):
 
         self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.label_2)
 
-        self.doubleSpinBox = QDoubleSpinBox(self.page_4)
-        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
-        self.doubleSpinBox.setDecimals(5)
-        self.doubleSpinBox.setMinimum(0.000000000000000)
-        self.doubleSpinBox.setMaximum(1.000000000000000)
-        self.doubleSpinBox.setSingleStep(0.000100000000000)
-        self.doubleSpinBox.setValue(0.001000000000000)
+        self.learningRateDoubleSpinBox = QDoubleSpinBox(self.page_4)
+        self.learningRateDoubleSpinBox.setObjectName(u"learningRateDoubleSpinBox")
+        self.learningRateDoubleSpinBox.setDecimals(4)
+        self.learningRateDoubleSpinBox.setMinimum(0.000100000000000)
+        self.learningRateDoubleSpinBox.setMaximum(1.000000000000000)
+        self.learningRateDoubleSpinBox.setSingleStep(0.000100000000000)
+        self.learningRateDoubleSpinBox.setValue(0.001000000000000)
 
-        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.doubleSpinBox)
+        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.learningRateDoubleSpinBox)
+
+        self.label_5 = QLabel(self.page_4)
+        self.label_5.setObjectName(u"label_5")
+
+        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.label_5)
+
+        self.gammaDoubleSpinBox = QDoubleSpinBox(self.page_4)
+        self.gammaDoubleSpinBox.setObjectName(u"gammaDoubleSpinBox")
+        self.gammaDoubleSpinBox.setDecimals(4)
+        self.gammaDoubleSpinBox.setMinimum(0.900000000000000)
+        self.gammaDoubleSpinBox.setMaximum(1.000000000000000)
+        self.gammaDoubleSpinBox.setSingleStep(0.001000000000000)
+        self.gammaDoubleSpinBox.setValue(0.990000000000000)
+
+        self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.gammaDoubleSpinBox)
+
+        self.label_6 = QLabel(self.page_4)
+        self.label_6.setObjectName(u"label_6")
+
+        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.label_6)
+
+        self.batchSizeSpinBox = QSpinBox(self.page_4)
+        self.batchSizeSpinBox.setObjectName(u"batchSizeSpinBox")
+        self.batchSizeSpinBox.setMinimum(1)
+        self.batchSizeSpinBox.setMaximum(256)
+        self.batchSizeSpinBox.setValue(32)
+
+        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.batchSizeSpinBox)
+
+        self.label_9 = QLabel(self.page_4)
+        self.label_9.setObjectName(u"label_9")
+
+        self.formLayout_3.setWidget(3, QFormLayout.LabelRole, self.label_9)
+
+        self.epsilonDoubleSpinBox = QDoubleSpinBox(self.page_4)
+        self.epsilonDoubleSpinBox.setObjectName(u"epsilonDoubleSpinBox")
+        self.epsilonDoubleSpinBox.setMaximum(1.000000000000000)
+        self.epsilonDoubleSpinBox.setSingleStep(0.010000000000000)
+        self.epsilonDoubleSpinBox.setValue(1.000000000000000)
+
+        self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.epsilonDoubleSpinBox)
+
+        self.label_8 = QLabel(self.page_4)
+        self.label_8.setObjectName(u"label_8")
+
+        self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.label_8)
+
+        self.epsilonDecDoubleSpinBox = QDoubleSpinBox(self.page_4)
+        self.epsilonDecDoubleSpinBox.setObjectName(u"epsilonDecDoubleSpinBox")
+        self.epsilonDecDoubleSpinBox.setDecimals(6)
+        self.epsilonDecDoubleSpinBox.setMaximum(1.000000000000000)
+        self.epsilonDecDoubleSpinBox.setSingleStep(0.000001000000000)
+        self.epsilonDecDoubleSpinBox.setValue(0.000001000000000)
+
+        self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.epsilonDecDoubleSpinBox)
+
+        self.label_7 = QLabel(self.page_4)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout_3.setWidget(5, QFormLayout.LabelRole, self.label_7)
+
+        self.epsilonMinSpinBox = QDoubleSpinBox(self.page_4)
+        self.epsilonMinSpinBox.setObjectName(u"epsilonMinSpinBox")
+        self.epsilonMinSpinBox.setMaximum(1.000000000000000)
+        self.epsilonMinSpinBox.setSingleStep(0.001000000000000)
+        self.epsilonMinSpinBox.setValue(0.010000000000000)
+
+        self.formLayout_3.setWidget(5, QFormLayout.FieldRole, self.epsilonMinSpinBox)
+
+        self.label_10 = QLabel(self.page_4)
+        self.label_10.setObjectName(u"label_10")
+
+        self.formLayout_3.setWidget(6, QFormLayout.LabelRole, self.label_10)
+
+        self.layer1SpinBox = QSpinBox(self.page_4)
+        self.layer1SpinBox.setObjectName(u"layer1SpinBox")
+        self.layer1SpinBox.setMinimum(1)
+        self.layer1SpinBox.setMaximum(1024)
+        self.layer1SpinBox.setValue(64)
+
+        self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.layer1SpinBox)
+
+        self.label_11 = QLabel(self.page_4)
+        self.label_11.setObjectName(u"label_11")
+
+        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.label_11)
+
+        self.layer2SpinBox = QSpinBox(self.page_4)
+        self.layer2SpinBox.setObjectName(u"layer2SpinBox")
+        self.layer2SpinBox.setMinimum(1)
+        self.layer2SpinBox.setMaximum(1024)
+        self.layer2SpinBox.setValue(32)
+
+        self.formLayout_3.setWidget(7, QFormLayout.FieldRole, self.layer2SpinBox)
 
         self.algStackedWidget.addWidget(self.page_4)
 
@@ -237,6 +355,8 @@ class Ui_GUI(object):
         self.retranslateUi(GUI)
 
         self.envStackedWidget.setCurrentIndex(0)
+        self.gridSizeComboBox.setCurrentIndex(1)
+        self.snakeVisionComboBox.setCurrentIndex(1)
         self.algStackedWidget.setCurrentIndex(1)
 
 
@@ -253,7 +373,19 @@ class Ui_GUI(object):
         self.envComboBox.setItemText(1, QCoreApplication.translate("GUI", u"Breakout", None))
         self.envComboBox.setItemText(2, QCoreApplication.translate("GUI", u"Pong", None))
 
-        self.label.setText(QCoreApplication.translate("GUI", u"Snake-Vision: ", None))
+        self.label.setText(QCoreApplication.translate("GUI", u"Grid Size: ", None))
+        self.gridSizeComboBox.setItemText(0, QCoreApplication.translate("GUI", u"3x3", None))
+        self.gridSizeComboBox.setItemText(1, QCoreApplication.translate("GUI", u"5x5", None))
+        self.gridSizeComboBox.setItemText(2, QCoreApplication.translate("GUI", u"7x7", None))
+        self.gridSizeComboBox.setItemText(3, QCoreApplication.translate("GUI", u"9x9", None))
+
+        self.label_4.setText(QCoreApplication.translate("GUI", u"Snake Vision: ", None))
+        self.snakeVisionComboBox.setItemText(0, QCoreApplication.translate("GUI", u"1", None))
+        self.snakeVisionComboBox.setItemText(1, QCoreApplication.translate("GUI", u"2", None))
+        self.snakeVisionComboBox.setItemText(2, QCoreApplication.translate("GUI", u"3", None))
+        self.snakeVisionComboBox.setItemText(3, QCoreApplication.translate("GUI", u"4", None))
+        self.snakeVisionComboBox.setItemText(4, QCoreApplication.translate("GUI", u"5", None))
+
         self.label_3.setText(QCoreApplication.translate("GUI", u"Paddle Size: ", None))
         self.algLabel.setText(QCoreApplication.translate("GUI", u"RL-Algorithm: ", None))
         self.algComboBox.setItemText(0, QCoreApplication.translate("GUI", u"DQN", None))
@@ -262,6 +394,13 @@ class Ui_GUI(object):
         self.algComboBox.setItemText(3, QCoreApplication.translate("GUI", u"SAC", None))
 
         self.label_2.setText(QCoreApplication.translate("GUI", u"Learning Rate: ", None))
+        self.label_5.setText(QCoreApplication.translate("GUI", u"Gamma: ", None))
+        self.label_6.setText(QCoreApplication.translate("GUI", u"Batch Size: ", None))
+        self.label_9.setText(QCoreApplication.translate("GUI", u"Epsilon Start:", None))
+        self.label_8.setText(QCoreApplication.translate("GUI", u"Epsilon Decrease: ", None))
+        self.label_7.setText(QCoreApplication.translate("GUI", u"Epsilon Min: ", None))
+        self.label_10.setText(QCoreApplication.translate("GUI", u"Layer 1 Neurons: ", None))
+        self.label_11.setText(QCoreApplication.translate("GUI", u"Layer 2 Neurons: ", None))
         self.startButton.setText(QCoreApplication.translate("GUI", u"Start", None))
         self.pauseButton.setText(QCoreApplication.translate("GUI", u"Pause", None))
         self.stopButton.setText(QCoreApplication.translate("GUI", u"Stop", None))

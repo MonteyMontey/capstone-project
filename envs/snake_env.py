@@ -112,7 +112,7 @@ class SnakeEnv:
         for y in range(self.vision * 2 + 1):
             for x in range(self.vision * 2 + 1):
                 cell = (self._snake.cells[-1][0] - self.vision + x, self._snake.cells[-1][1] - self.vision + y)
-                if not self._is_wall(cell) and not self._is_snake(cell):
+                if not self._is_wall(cell) and not self._is_snake(cell) and not cell == self._food_cell:
                     arr[cell[1]][cell[0]] = (10, 10, 10)
 
         return arr

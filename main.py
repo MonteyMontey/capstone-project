@@ -53,7 +53,7 @@ class Worker(QRunnable):
 
                 state = state_
 
-                update_display()
+                update_env_canvas()
                 QApplication.processEvents()
                 time.sleep(0.2)
 
@@ -69,28 +69,53 @@ def start_training():
 
 
 @Slot(str)
-def change_env(selection):
-    global env
+def env_changed(selection):
+    init_env(selection)
+    update_env_canvas()
+    swap_env_configs(selection)
 
-    env = ENV_OBJECT_MAP[selection]()
+
+@Slot()
+def env_config_changed():
+    global env
+    env_name = env.__class__.__name__
+
+    config = get_env_config(env_name)
+
+    env = ENV_NAME_TO_OBJECT_MAP[env_name](*config)
     env.reset()
 
-    update_display()
-    change_env_configs(selection)
+    update_env_canvas()
+
+
+def get_env_config(env_name):
+    global env
+
+    if env_name == "SnakeEnv":
+        config = get_snake_env_config()
+    else:
+        config = []
+
+    return config
 
 
 @Slot(str)
-def change_alg(selection):
+def alg_changed(selection):
     change_alg_configs(selection)
 
 
-def change_env_configs(selection):
-    env_stacked_widget = window.ui.envStackedWidget
+def alg_config_changed(selection):
+    pass
 
-    if selection == "Breakout":
-        env_stacked_widget.setCurrentIndex(1)
-    elif selection == "Snake":
-        env_stacked_widget.setCurrentIndex(0)
+
+def get_snake_env_config():
+    grid_size_index = window.ui.gridSizeComboBox.currentIndex()
+    grid_size = [3, 5, 7, 9][grid_size_index]
+
+    snake_vision_index = window.ui.snakeVisionComboBox.currentIndex()
+    snake_vision = [1, 2, 3, 4, 5][snake_vision_index]
+
+    return grid_size, snake_vision
 
 
 def change_alg_configs(selection):
@@ -102,7 +127,15 @@ def change_alg_configs(selection):
         alg_stacked_widget.setCurrentIndex(0)
 
 
-def update_display():
+def init_env(env_name):
+    global env
+
+    env_config = get_env_config(env_name)
+    env = ENV_SELECTION_TO_OBJECT_MAP[env_name](*env_config)
+    env.reset()
+
+
+def update_env_canvas():
     global env
 
     zoom = ENV_ZOOM_MAP[env.__class__.__name__]
@@ -117,7 +150,18 @@ def update_display():
     window.ui.envView.setScene(scene)
 
 
-ENV_OBJECT_MAP = {"Snake": SnakeEnv, "Breakout": BreakoutEnv, "Pong": PongEnv}
+def swap_env_configs(selection):
+    env_stacked_widget = window.ui.envStackedWidget
+
+    if selection == "Breakout":
+        env_stacked_widget.setCurrentIndex(1)
+    elif selection == "Snake":
+        env_stacked_widget.setCurrentIndex(0)
+
+
+ENV_SELECTION_TO_OBJECT_MAP = {"Snake": SnakeEnv, "Breakout": BreakoutEnv, "Pong": PongEnv}
+ENV_NAME_TO_OBJECT_MAP = {"SnakeEnv": SnakeEnv, "BreakoutEnv": BreakoutEnv, "PongEnv": PongEnv}
+
 ENV_ZOOM_MAP = {"SnakeEnv": 30, "BreakoutEnv": 8, "PongEnv": 20}
 
 ALG_OBJECT_MAP = {"DQN": DQNAgent}
@@ -133,11 +177,14 @@ if __name__ == "__main__":
     env = SnakeEnv()
 
     env_selection = window.ui.envComboBox.currentText()
-    change_env(env_selection)
+    env_changed(env_selection)
 
-    window.ui.envComboBox.currentTextChanged.connect(change_env)
+    window.ui.envComboBox.currentTextChanged.connect(env_changed)
 
-    window.ui.algComboBox.currentTextChanged.connect(change_alg)
+    window.ui.gridSizeComboBox.currentIndexChanged.connect(env_config_changed)
+    window.ui.snakeVisionComboBox.currentIndexChanged.connect(env_config_changed)
+
+    window.ui.algComboBox.currentTextChanged.connect(alg_changed)
 
     window.ui.startButton.clicked.connect(start_training)
 

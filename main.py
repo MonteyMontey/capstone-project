@@ -1,16 +1,15 @@
 import sys
 import time
+import random
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QGraphicsScene
-from PySide6.QtGui import QPixmap, QImage
-from PySide6.QtCore import Slot, QThreadPool, QRunnable
+from PyQt5.QtCore import pyqtSlot, QThreadPool, QRunnable, QTimer
+from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsScene
 
-from gui import Ui_GUI
-
-from envs.snake_env import SnakeEnv, Action
-from envs.pong_env import PongEnv
 from envs.breakout_env import BreakoutEnv
-
+from envs.pong_env import PongEnv
+from envs.snake_env import SnakeEnv, Action
+from gui import Ui_GUI
 from rl_algorithms.dqn import DQNAgent
 
 
@@ -22,7 +21,7 @@ class MainWindow(QMainWindow):
 
 
 class Worker(QRunnable):
-    @Slot()
+    @pyqtSlot()
     def run(self):
         global env
 
@@ -58,7 +57,7 @@ class Worker(QRunnable):
                 time.sleep(0.2)
 
 
-@Slot()
+@pyqtSlot()
 def start_training():
     window.ui.startButton.setEnabled(False)
     window.ui.envComboBox.setEnabled(False)
@@ -68,14 +67,14 @@ def start_training():
     thread_pool.start(worker)
 
 
-@Slot(str)
+@pyqtSlot(str)
 def env_changed(selection):
     init_env(selection)
     update_env_canvas()
     swap_env_configs(selection)
 
 
-@Slot()
+@pyqtSlot()
 def env_config_changed():
     global env
     env_name = env.__class__.__name__
@@ -99,12 +98,8 @@ def get_env_config(env_name):
     return config
 
 
-@Slot(str)
+@pyqtSlot(str)
 def alg_changed(selection):
-    change_alg_configs(selection)
-
-
-def alg_config_changed(selection):
     pass
 
 
@@ -138,7 +133,7 @@ def init_env(env_name):
 def update_env_canvas():
     global env
 
-    zoom = ENV_ZOOM_MAP[env.__class__.__name__]
+    zoom = ENV_NAME_TO_ZOOM_MAP[env.__class__.__name__]
 
     img = env.screenshot().repeat(zoom, axis=0).repeat(zoom, axis=1)
 
@@ -162,7 +157,7 @@ def swap_env_configs(selection):
 ENV_SELECTION_TO_OBJECT_MAP = {"Snake": SnakeEnv, "Breakout": BreakoutEnv, "Pong": PongEnv}
 ENV_NAME_TO_OBJECT_MAP = {"SnakeEnv": SnakeEnv, "BreakoutEnv": BreakoutEnv, "PongEnv": PongEnv}
 
-ENV_ZOOM_MAP = {"SnakeEnv": 30, "BreakoutEnv": 8, "PongEnv": 20}
+ENV_NAME_TO_ZOOM_MAP = {"SnakeEnv": 30, "BreakoutEnv": 8, "PongEnv": 20}
 
 ALG_OBJECT_MAP = {"DQN": DQNAgent}
 
@@ -174,10 +169,23 @@ if __name__ == "__main__":
     thread_pool = QThreadPool()
     print("Multithreading with maximum %d threads" % thread_pool.maxThreadCount())
 
+    """ https://www.learnpyqt.com/tutorials/plotting-matplotlib/ """
+    def update_plot():
+        canvas = window.ui.mplWidget.canvas
+        canvas.ax.cla()
+        canvas.ax.plot(list(range(50)), [random.randint(0, 10) for _ in range(50)], '#3399FF')
+        canvas.draw()
+
+    timer = QTimer()
+    timer.setInterval(1000)
+    timer.timeout.connect(update_plot)
+    timer.start()
+
     env = SnakeEnv()
 
     env_selection = window.ui.envComboBox.currentText()
     env_changed(env_selection)
+    env_config_changed()
 
     window.ui.envComboBox.currentTextChanged.connect(env_changed)
 

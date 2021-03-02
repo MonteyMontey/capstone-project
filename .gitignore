@@ -1,4 +1,4 @@
 .idea/
 venv/
 __pycache__/
-gui.ui
+gui/mainwindow.ui

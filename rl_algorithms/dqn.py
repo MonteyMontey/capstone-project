@@ -10,8 +10,8 @@ from .replay_memory import ReplayBuffer
 
 
 class DQNAgent(object):
-    def __init__(self, input_dim, fc1_dim, fc2_dim, output_dim, lr, gamma, epsilon, mem_size, batch_size,
-                 eps_min=0.01, eps_dec=5e-7, replace=1000):
+    def __init__(self, lr, gamma, batch_size, epsilon, eps_dec, eps_min, fc1_dim, fc2_dim, input_dim=11, output_dim=4,
+                 mem_size=1_000_000, replace=1000):
         self.gamma = gamma
         self.epsilon = epsilon
         self.batch_size = batch_size
@@ -22,7 +22,7 @@ class DQNAgent(object):
         self.action_space = [i for i in range(output_dim)]
         self.learn_step_counter = 0
 
-        self.memory = ReplayBuffer(mem_size, input_dim)
+        self.memory = ReplayBuffer(mem_size, input_dim)  # TODO: read input shape from gui
 
         self.q_eval = DeepQNetwork(input_dim, fc1_dim, fc2_dim, output_dim, lr)
         self.q_next = DeepQNetwork(input_dim, fc1_dim, fc2_dim, output_dim, lr)

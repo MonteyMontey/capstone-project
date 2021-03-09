@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.thread_pool = QThreadPool()
-        print("Multithreading with %d threads." % self.thread_pool.maxThreadCount())
+        print("Detected %d cores" % self.thread_pool.maxThreadCount())
 
         # initialize mpl learning graph
         # https://www.learnpyqt.com/tutorials/plotting-matplotlib/
@@ -94,6 +94,18 @@ class MainWindow(QMainWindow):
         self.swap_env_configs(env_name)
         self.update_env_canvas()
 
+    @pyqtSlot(str)
+    def alg_changed(self, alg_name):
+        self.swap_alg_configs(alg_name)
+
+    def swap_alg_configs(self, alg_name):
+        alg_stacked_widget = self.ui.algStackedWidget
+
+        if alg_name == "DQN":
+            alg_stacked_widget.setCurrentIndex(0)
+        else:
+            alg_stacked_widget.setCurrentIndex(1)
+
     @pyqtSlot(int)
     def update_snake_vision_selections(self, index):
         self.ui.snakeVisionComboBox.clear()
@@ -122,26 +134,44 @@ class MainWindow(QMainWindow):
         self.env.reset()
         self.update_env_canvas()
 
-    @pyqtSlot(str)
-    def alg_changed(self, selection):
-        pass
-
-    def change_alg_configs(self, selection):
-        alg_stacked_widget = self.ui.algStackedWidget
-
-        if selection == "DQN":
-            alg_stacked_widget.setCurrentIndex(1)
-        else:
-            alg_stacked_widget.setCurrentIndex(0)
-
     @pyqtSlot()
     def start_training(self):
-        self.ui.startButton.setEnabled(False)
-        self.ui.envComboBox.setEnabled(False)
-        self.ui.algComboBox.setEnabled(False)
+        self.disable_config()
 
-        worker = Worker(self)
+        alg = self.ui.algComboBox.currentText()
+        alg_config = ()
+        if alg == "DQN":
+            alg_config = self.get_alg_config()
+
+        worker = Worker(self, alg, alg_config)
         self.thread_pool.start(worker)
+
+    def get_alg_config(self):
+        lr = self.ui.learningRateDoubleSpinBox.value()
+        gamma = self.ui.gammaDoubleSpinBox.value()
+        batch_size = self.ui.batchSizeSpinBox.value()
+        epsilon = self.ui.epsilonDoubleSpinBox.value()
+        eps_dec = self.ui.epsilonDecDoubleSpinBox.value()
+        eps_min = self.ui.epsilonMinSpinBox.value()
+        n_layer_1 = self.ui.layer1SpinBox.value()
+        n_layer_2 = self.ui.layer2SpinBox.value()
+
+        return lr, gamma, batch_size, epsilon, eps_dec, eps_min, n_layer_1, n_layer_2
+
+    def disable_config(self):
+        self.ui.envComboBox.setEnabled(False)
+        self.ui.gridSizeComboBox.setEnabled(False)
+        self.ui.snakeVisionComboBox.setEnabled(False)
+        self.ui.algComboBox.setEnabled(False)
+        self.ui.learningRateDoubleSpinBox.setEnabled(False)
+        self.ui.gammaDoubleSpinBox.setEnabled(False)
+        self.ui.batchSizeSpinBox.setEnabled(False)
+        self.ui.epsilonDoubleSpinBox.setEnabled(False)
+        self.ui.epsilonDecDoubleSpinBox.setEnabled(False)
+        self.ui.epsilonMinSpinBox.setEnabled(False)
+        self.ui.layer1SpinBox.setEnabled(False)
+        self.ui.layer2SpinBox.setEnabled(False)
+        self.ui.startButton.setEnabled(False)
 
     def update_learning_curve_canvas(self):
         canvas = self.ui.mplWidget.canvas
@@ -163,15 +193,16 @@ class MainWindow(QMainWindow):
 
 
 class Worker(QRunnable):
-    def __init__(self, window):
+    def __init__(self, window, alg, alg_config):
         super(QRunnable, self).__init__()
         self.window = window
+        self.alg = alg
+        self.alg_config = alg_config
 
     def run(self):
-        rl_algo = self.window.ui.algComboBox.currentText()
-        rl_agent = ALG_NAME_TO_OBJECT[rl_algo](27, 64, 32, 4, 0.001, 0.999, 1, 1_000_000, 32)
+        rl_agent = ALG_NAME_TO_OBJECT[self.alg](*self.alg_config)
 
-        for i in range(100):
+        for i in range(1000):
             done = False
             state = self.window.env.reset()
 
@@ -197,4 +228,4 @@ class Worker(QRunnable):
 
                 self.window.update_env_canvas()
                 QApplication.processEvents()
-                time.sleep(0.2)
+                time.sleep(0.01)

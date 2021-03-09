@@ -1,7 +1,8 @@
 import time
 import random
+import numpy as np
 
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QThreadPool, QRunnable, QTimer, QObject
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QThreadPool, QRunnable, QTimer, QObject, QMutex
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsScene
 
@@ -26,12 +27,14 @@ class MainWindow(QMainWindow):
         self.thread_pool = QThreadPool()
         print("Detected %d cores" % self.thread_pool.maxThreadCount())
 
-        # initialize mpl learning graph
+        self.ui.mplWidget.canvas.ax.set_ylabel('score')
+        self.ui.mplWidget.canvas.ax.set_xlabel('steps')
+
         # https://www.learnpyqt.com/tutorials/plotting-matplotlib/
-        self.timer = QTimer()
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.update_learning_curve_canvas)
-        self.timer.start()
+        # self.timer = QTimer()
+        # self.timer.setInterval(1000)
+        # self.timer.timeout.connect(self.update_learning_curve_canvas)
+        # self.timer.start()
 
         # initialize environment
         self.env = None  # TODO: init interface
@@ -147,6 +150,9 @@ class MainWindow(QMainWindow):
 
         # noinspection PyUnresolvedReferences
         worker.signals.update_env.connect(self.update_env_canvas)
+        # noinspection PyUnresolvedReferences
+        worker.signals.update_learning_graph.connect(self.update_learning_curve_canvas)
+
         self.thread_pool.start(worker)
 
     def get_alg_config(self):
@@ -176,11 +182,19 @@ class MainWindow(QMainWindow):
         self.ui.layer2SpinBox.setEnabled(False)
         self.ui.startButton.setEnabled(False)
 
-    def update_learning_curve_canvas(self):
-        canvas = self.ui.mplWidget.canvas
-        canvas.ax.cla()
-        canvas.ax.plot(list(range(50)), [random.randint(0, 10) for _ in range(50)], '#3399FF')
-        canvas.draw()
+    def update_learning_curve_canvas(self, data):
+        score_history = data[0]
+        x = data[1]
+
+        running_avg = np.zeros(len(score_history))
+        for i in range(len(running_avg)):
+            running_avg[i] = np.mean(score_history[max(0, i - 100):(i + 1)])
+
+        self.ui.mplWidget.canvas.ax.cla()
+        self.ui.mplWidget.canvas.ax.set_ylabel('score')
+        self.ui.mplWidget.canvas.ax.set_xlabel('steps')
+        self.ui.mplWidget.canvas.ax.plot(x, running_avg, '#3399FF')
+        self.ui.mplWidget.canvas.draw()
 
     def update_env_canvas(self):
         zoom = ENV_ZOOM[self.env.__class__.__name__]
@@ -207,8 +221,11 @@ class Worker(QRunnable):
     def run(self):
         rl_agent = ALG_NAME_TO_OBJECT[self.alg](*self.alg_config)
 
-        for i in range(1000):
+        scores, score_history = [], []
+
+        for i in range(1_000_000):
             done = False
+            score = 0
             state = self.window.env.reset()
 
             while not done:
@@ -237,6 +254,13 @@ class Worker(QRunnable):
                 QApplication.processEvents()
                 time.sleep(0.01)
 
+            score_history.append(score)
+            x = [j + 1 for j in range(i + 1)]
+
+            # noinspection PyUnresolvedReferences
+            self.signals.update_learning_graph.emit((score_history, x))
+
 
 class WorkerSignals(QObject):
     update_env = pyqtSignal()
+    update_learning_graph = pyqtSignal(tuple)

@@ -1,7 +1,7 @@
 import time
 import random
 
-from PyQt5.QtCore import pyqtSlot, QThreadPool, QRunnable, QTimer
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QThreadPool, QRunnable, QTimer, QObject
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsScene
 
@@ -144,6 +144,9 @@ class MainWindow(QMainWindow):
             alg_config = self.get_alg_config()
 
         worker = Worker(self, alg, alg_config)
+
+        # noinspection PyUnresolvedReferences
+        worker.signals.update_env.connect(self.update_env_canvas)
         self.thread_pool.start(worker)
 
     def get_alg_config(self):
@@ -199,6 +202,8 @@ class Worker(QRunnable):
         self.alg = alg
         self.alg_config = alg_config
 
+        self.signals = WorkerSignals()
+
     def run(self):
         rl_agent = ALG_NAME_TO_OBJECT[self.alg](*self.alg_config)
 
@@ -226,6 +231,12 @@ class Worker(QRunnable):
 
                 state = state_
 
-                self.window.update_env_canvas()
+                # noinspection PyUnresolvedReferences
+                self.signals.update_env.emit()
+
                 QApplication.processEvents()
                 time.sleep(0.01)
+
+
+class WorkerSignals(QObject):
+    update_env = pyqtSignal()

@@ -123,7 +123,7 @@ class BreakoutEnv:
         # state, reward, done
         return self._get_state(), reward, done
 
-    def get_screenshot(self):
+    def screenshot(self):
         arr = np.zeros([HEIGHT, WIDTH, 3], dtype=np.uint8)
 
         for row_idx, row in enumerate(self.blocks):

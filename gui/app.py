@@ -27,6 +27,8 @@ class MainWindow(QMainWindow):
         self.thread_pool = QThreadPool()
         print("Detected %d cores" % self.thread_pool.maxThreadCount())
 
+        self.render_mode = 1
+
         self.ui.mplWidget.canvas.ax.set_ylabel('score')
         self.ui.mplWidget.canvas.ax.set_xlabel('steps')
 
@@ -52,6 +54,10 @@ class MainWindow(QMainWindow):
         self.ui.algComboBox.currentTextChanged.connect(self.alg_changed)
 
         self.ui.startButton.clicked.connect(self.start_training)
+
+        self.ui.slowRenderingCheckBox.clicked.connect(self.slow_render)
+        self.ui.fastRenderingCheckBox.clicked.connect(self.fast_render)
+        self.ui.noRenderingCheckBox.clicked.connect(self.no_render)
 
     def init_env(self, env_name):
         config = None
@@ -155,6 +161,18 @@ class MainWindow(QMainWindow):
 
         self.thread_pool.start(worker)
 
+    @pyqtSlot()
+    def slow_render(self):
+        self.render_mode = 1
+
+    @pyqtSlot()
+    def fast_render(self):
+        self.render_mode = 2
+
+    @pyqtSlot()
+    def no_render(self):
+        self.render_mode = 3
+
     def get_alg_config(self):
         lr = self.ui.learningRateDoubleSpinBox.value()
         gamma = self.ui.gammaDoubleSpinBox.value()
@@ -248,11 +266,17 @@ class Worker(QRunnable):
 
                 state = state_
 
-                # noinspection PyUnresolvedReferences
-                self.signals.update_env.emit()
+                if self.window.render_mode != 3:
+                    # noinspection PyUnresolvedReferences
+                    self.signals.update_env.emit()
+                    QApplication.processEvents()
 
-                QApplication.processEvents()
-                time.sleep(0.01)
+                if self.window.render_mode == 1:
+                    time.sleep(0.5)
+                elif self.window.render_mode == 2:
+                    time.sleep(0.05)
+                else:
+                    time.sleep(0.001)
 
             score_history.append(score)
             x = [j + 1 for j in range(i + 1)]

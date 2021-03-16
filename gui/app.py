@@ -110,10 +110,12 @@ class MainWindow(QMainWindow):
     def swap_alg_configs(self, alg_name):
         alg_stacked_widget = self.ui.algStackedWidget
 
-        if alg_name == "DQN":
+        if alg_name == "DDDQN":
             alg_stacked_widget.setCurrentIndex(0)
-        else:
+        elif alg_name == "DDPG":
             alg_stacked_widget.setCurrentIndex(1)
+        elif alg_name == "SAC":
+            alg_stacked_widget.setCurrentIndex(2)
 
     @pyqtSlot(int)
     def update_snake_vision_selections(self, index):

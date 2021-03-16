@@ -8,10 +8,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 from .replay_memory import ReplayBuffer
-from .rl_algorithm_interface import RLAlgorithmInterface
+from .interface import AlgInterface
 
 
-class DuelingDDQNAgent(RLAlgorithmInterface):
+class DuelingDDQNAgent(AlgInterface):
     def __init__(self, lr, gamma, batch_size, epsilon, eps_dec, eps_min, fc1_dim, fc2_dim, input_dim=11, output_dim=4,
                  mem_size=1_000_000, tau=0.01):
         self.gamma = gamma

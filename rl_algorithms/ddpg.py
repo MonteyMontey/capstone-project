@@ -8,10 +8,10 @@ import torch.nn as nn
 import torch.optim as optim
 
 from .replay_memory import ReplayBuffer
-from .rl_algorithm_interface import RLAlgorithmInterface
+from .interface import AlgInterface
 
 
-class DDPGAgent(RLAlgorithmInterface):
+class DDPGAgent(AlgInterface):
     def __init__(self, alpha, beta, gamma, batch_size, fc1_dims, fc2_dims, input_dim, output_dim, mem_size, tau):
         self.gamma = gamma
         self.tau = tau

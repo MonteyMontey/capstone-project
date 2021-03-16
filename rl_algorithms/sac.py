@@ -7,10 +7,10 @@ import torch.optim as optim
 from torch.distributions import Normal
 
 from .replay_memory import ReplayBuffer
-from .rl_algorithm_interface import RLAlgorithmInterface
+from .interface import AlgInterface
 
 
-class SACAgent(RLAlgorithmInterface):
+class SACAgent(AlgInterface):
     def __init__(self, alpha, beta, gamma, batch_size, tau, layer1_size, layer2_size, input_dims, n_actions,
                  action_space_high, mem_size, reward_scale):
         self.gamma = gamma

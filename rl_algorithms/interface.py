@@ -1,4 +1,4 @@
-class RLAlgorithmInterface:
+class AlgInterface:
 
     def choose_action(self, observation: list) -> object:
         pass

@@ -1,6 +1,8 @@
 import numpy as np
 import random
 
+from .interface import EnvInterface
+
 RED = (255, 51, 51)
 ORANGE = (255, 153, 51)
 YELLOW = (255, 255, 51)
@@ -44,7 +46,7 @@ class Paddle:
             self.x_end -= 1
 
 
-class BreakoutEnv:
+class BreakoutEnv(EnvInterface):
     def __init__(self):
         self.paddle = None
         self.ball = None

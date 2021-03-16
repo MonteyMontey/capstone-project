@@ -2,6 +2,8 @@ import numpy as np
 from enum import Enum
 from typing import List, Tuple
 
+from .interface import EnvInterface
+
 
 class Action(Enum):
     UP = (0, -1)
@@ -10,7 +12,7 @@ class Action(Enum):
     LEFT = (-1, 0)
 
 
-class Snake:
+class Snake(EnvInterface):
     def __init__(self, cells: List[Tuple], vel: Action = Action.UP):
         self.cells = cells
         self._last_action = vel

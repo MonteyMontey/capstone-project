@@ -1,6 +1,8 @@
 import random
 import numpy as np
 
+from .interface import EnvInterface
+
 
 class Ball:
     def __init__(self):
@@ -28,7 +30,7 @@ class Paddle:
             self.pos += 1
 
 
-class PongEnv:
+class PongEnv(EnvInterface):
     def __init__(self):
         self.ball = None
         self.left_paddle = None

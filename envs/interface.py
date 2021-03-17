@@ -1,9 +1,12 @@
+from .action import Action
+
+
 class EnvInterface:
 
     def reset(self) -> object:
         pass
 
-    def step(self, action) -> tuple:
+    def step(self, action: Action) -> tuple:
         pass
 
     def screenshot(self) -> object:

@@ -2,6 +2,7 @@ import random
 import numpy as np
 
 from .interface import EnvInterface
+from .action import Action
 
 
 class Ball:
@@ -43,12 +44,12 @@ class PongEnv(EnvInterface):
 
         return self._get_state()
 
-    def step(self, action):
+    def step(self, action: Action):
         reward = 0
 
-        if action:
+        if action == Action.UP:
             self.left_paddle.up()
-        else:
+        elif action == Action.DOWN:
             self.left_paddle.down()
 
         if (self.ball.pos[1] == 0 and self.ball.vel[1] == -1) or (self.ball.pos[1] == 8 and self.ball.vel[1] == 1):

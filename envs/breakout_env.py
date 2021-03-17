@@ -2,6 +2,7 @@ import numpy as np
 import random
 
 from .interface import EnvInterface
+from .action import Action
 
 RED = (255, 51, 51)
 ORANGE = (255, 153, 51)
@@ -63,12 +64,12 @@ class BreakoutEnv(EnvInterface):
         return [self.paddle.x_start / (WIDTH - 1), self.paddle.x_end / (WIDTH - 1),
                 self.ball.pos[0] / (WIDTH - 1), self.ball.pos[1] / (HEIGHT - 1)]
 
-    def step(self, action):
+    def step(self, action: Action):
         reward = 0
 
-        if action:
+        if action == Action.RIGHT:
             self.paddle.right()
-        else:
+        elif action == Action.LEFT:
             self.paddle.left()
 
         # left right walls

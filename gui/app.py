@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.thread_pool = QThreadPool()
+        self.worker = None
 
         self.render_mode = 1
 
@@ -46,6 +47,8 @@ class MainWindow(QMainWindow):
         self.ui.algComboBox.currentTextChanged.connect(self.alg_changed)
 
         self.ui.startButton.clicked.connect(self.start_training)
+        self.ui.pauseButton.clicked.connect(self.pause_training)
+        self.ui.stopButton.clicked.connect(self.stop_training)
 
         self.ui.slowRenderingCheckBox.clicked.connect(self.slow_render)
         self.ui.fastRenderingCheckBox.clicked.connect(self.fast_render)
@@ -125,7 +128,10 @@ class MainWindow(QMainWindow):
 
     @pyqtSlot()
     def start_training(self):
-        self.disable_gui_for_training()
+        self.set_gui_training(True)
+
+        self.ui.pauseButton.setEnabled(True)
+        self.ui.stopButton.setEnabled(True)
 
         alg = self.ui.algComboBox.currentText()
         alg_config = ()
@@ -136,14 +142,30 @@ class MainWindow(QMainWindow):
         elif alg == "SAC":
             alg_config = self.get_sac_config()
 
-        worker = Worker(self, alg, alg_config)
+        self.worker = Worker(self, alg, alg_config)
 
         # noinspection PyUnresolvedReferences
-        worker.signals.update_env.connect(self.update_env_canvas)
+        self.worker.signals.update_env.connect(self.update_env_canvas)
         # noinspection PyUnresolvedReferences
-        worker.signals.update_learning_graph.connect(self.update_learning_curve_canvas)
+        self.worker.signals.update_learning_graph.connect(self.update_learning_curve_canvas)
 
-        self.thread_pool.start(worker)
+        self.thread_pool.start(self.worker)
+
+    @pyqtSlot()
+    def pause_training(self):
+        self.worker.pause = not self.worker.pause
+
+        if self.ui.pauseButton.text() == "Pause":
+            self.ui.pauseButton.setText("Continue")
+        elif self.ui.pauseButton.text() == "Continue":
+            self.ui.pauseButton.setText("Pause")
+
+    @pyqtSlot()
+    def stop_training(self):
+        self.worker.stop = True
+        self.set_gui_training(False)
+        self.ui.pauseButton.setDisabled(True)
+        self.ui.stopButton.setDisabled(True)
 
     @pyqtSlot()
     def slow_render(self):
@@ -187,12 +209,12 @@ class MainWindow(QMainWindow):
                 self.ui.layer1SpinBoxSAC.value(),
                 self.ui.layer2spinBoxSAC.value()]
 
-    def disable_gui_for_training(self):
-        self.ui.envComboBox.setEnabled(False)
-        self.ui.envStackedWidget.setEnabled(False)
-        self.ui.algComboBox.setEnabled(False)
-        self.ui.algStackedWidget.setEnabled(False)
-        self.ui.startButton.setEnabled(False)
+    def set_gui_training(self, mode: bool):
+        self.ui.envComboBox.setDisabled(mode)
+        self.ui.envStackedWidget.setDisabled(mode)
+        self.ui.algComboBox.setDisabled(mode)
+        self.ui.algStackedWidget.setDisabled(mode)
+        self.ui.startButton.setDisabled(mode)
 
     def update_learning_curve_canvas(self, data):
         score_history = data[0]

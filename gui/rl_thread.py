@@ -25,6 +25,9 @@ class Worker(QRunnable):
         self.alg = alg
         self.alg_config = alg_config
 
+        self.pause = False
+        self.stop = False
+
         self.signals = WorkerSignals()
 
     def run(self):
@@ -49,45 +52,53 @@ class Worker(QRunnable):
 
             state = self.window.env.reset()
             while not done:
-                action = rl_agent.choose_action(state)
-
-                if self.alg == "DDDQN":
-                    action_index = action
-                elif self.alg == "DDPG" or self.alg == "SAC":
-                    action_index = np.argmax(action)
-
-                if env_name == "Snake":
-                    converted_action = SNAKE_OUTPUT_TO_ACTION[action_index]
-                elif env_name == "Breakout":
-                    converted_action = BREAKOUT_OUTPUT_TO_ACTION[action_index]
-                elif env_name == "Pong":
-                    converted_action = PONG_OUTPUT_TO_ACTION[action_index]
-
-                state_, reward, done, _ = self.window.env.step(converted_action)
-                score += reward
-
-                rl_agent.remember(state, action, reward, state_, done)
-                rl_agent.learn()
-
-                state = state_
-
-                if self.window.render_mode != 3:
-                    # noinspection PyUnresolvedReferences
-                    self.signals.update_env.emit()
-                    QApplication.processEvents()
-
-                if self.window.render_mode == 1:
-                    time.sleep(0.5)
-                elif self.window.render_mode == 2:
-                    time.sleep(0.05)
+                if self.stop:
+                    break
+                elif self.pause:
+                    pass
                 else:
-                    time.sleep(0.001)
+                    action = rl_agent.choose_action(state)
+
+                    if self.alg == "DDDQN":
+                        action_index = action
+                    elif self.alg == "DDPG" or self.alg == "SAC":
+                        action_index = np.argmax(action)
+
+                    if env_name == "Snake":
+                        converted_action = SNAKE_OUTPUT_TO_ACTION[action_index]
+                    elif env_name == "Breakout":
+                        converted_action = BREAKOUT_OUTPUT_TO_ACTION[action_index]
+                    elif env_name == "Pong":
+                        converted_action = PONG_OUTPUT_TO_ACTION[action_index]
+
+                    state_, reward, done, _ = self.window.env.step(converted_action)
+                    score += reward
+
+                    rl_agent.remember(state, action, reward, state_, done)
+                    rl_agent.learn()
+
+                    state = state_
+
+                    if self.window.render_mode != 3:
+                        # noinspection PyUnresolvedReferences
+                        self.signals.update_env.emit()
+                        QApplication.processEvents()
+
+                    if self.window.render_mode == 1:
+                        time.sleep(0.5)
+                    elif self.window.render_mode == 2:
+                        time.sleep(0.05)
+                    else:
+                        time.sleep(0.001)
 
             score_history.append(score)
             x = [j + 1 for j in range(episode)]
 
             # noinspection PyUnresolvedReferences
             self.signals.update_learning_graph.emit((score_history, x))
+
+            if self.stop:
+                break
 
 
 class WorkerSignals(QObject):

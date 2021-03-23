@@ -6,16 +6,16 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.distributions import Normal
 
-from .replay_memory import ReplayBuffer
+from .continuous_replay_memory import ReplayBuffer
 from .interface import AlgInterface
 
 
 class SACAgent(AlgInterface):
-    def __init__(self, alpha, beta, gamma, batch_size, tau, layer1_size, layer2_size, input_dims, n_actions,
-                 action_space_high, mem_size, reward_scale):
+    def __init__(self, alpha, beta, gamma, batch_size, tau, reward_scale, layer1_size, layer2_size, input_dims,
+                 n_actions, action_space_high=1.0, mem_size=1_000_000):
         self.gamma = gamma
         self.tau = tau
-        self.memory = ReplayBuffer(mem_size, input_dims)
+        self.memory = ReplayBuffer(mem_size, input_dims, n_actions)
         self.batch_size = batch_size
         self.n_actions = n_actions
 

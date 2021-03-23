@@ -42,7 +42,7 @@ class PongEnv(EnvInterface):
         self.left_paddle = Paddle()
         self.right_paddle = Paddle()
 
-        return self._get_state()
+        return self.get_state()
 
     def step(self, action: Action):
         reward = 0
@@ -78,7 +78,7 @@ class PongEnv(EnvInterface):
         else:
             done = False
 
-        return self._get_state(), reward, done
+        return self.get_state(), reward, done, None
 
     def screenshot(self):
         arr = np.zeros([9, 16, 3], dtype=np.uint8)
@@ -98,5 +98,5 @@ class PongEnv(EnvInterface):
 
         return arr
 
-    def _get_state(self):
+    def get_state(self):
         return [self.left_paddle.pos / 9, self.ball.pos[0] / 16, self.ball.pos[1] / 9]

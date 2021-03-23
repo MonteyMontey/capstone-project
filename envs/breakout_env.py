@@ -13,7 +13,6 @@ BLUE = (51, 153, 255)
 
 WIDTH = 40
 HEIGHT = 25
-PADDLE_SIZE = 30
 SPACE_TOP = 4
 
 N_LAYERS = 6
@@ -31,10 +30,10 @@ class Ball:
 
 
 class Paddle:
-    def __init__(self):
+    def __init__(self, size):
         self.y_pos = HEIGHT - 1
-        self.x_start = WIDTH // 2 - PADDLE_SIZE // 2
-        self.x_end = self.x_start + PADDLE_SIZE - 1
+        self.x_start = WIDTH // 2 - size // 2
+        self.x_end = self.x_start + size - 1
 
     def right(self):
         if self.x_end != WIDTH - 1:
@@ -48,7 +47,9 @@ class Paddle:
 
 
 class BreakoutEnv(EnvInterface):
-    def __init__(self):
+    def __init__(self, paddle_size):
+        self.paddle_size = paddle_size
+
         self.paddle = None
         self.ball = None
         self.blocks = None
@@ -56,11 +57,11 @@ class BreakoutEnv(EnvInterface):
     def reset(self):
         self.blocks = np.zeros(shape=(N_LAYERS, WIDTH))
         self.ball = Ball()
-        self.paddle = Paddle()
+        self.paddle = Paddle(self.paddle_size)
 
-        return self._get_state()
+        return self.get_state()
 
-    def _get_state(self):
+    def get_state(self):
         return [self.paddle.x_start / (WIDTH - 1), self.paddle.x_end / (WIDTH - 1),
                 self.ball.pos[0] / (WIDTH - 1), self.ball.pos[1] / (HEIGHT - 1)]
 
@@ -84,7 +85,7 @@ class BreakoutEnv(EnvInterface):
         if self.ball.pos[1] == HEIGHT - 2:
             if self.paddle.x_start <= self.ball.pos[0] <= self.paddle.x_end:
                 reward += 1
-                if self.ball.pos[0] <= self.paddle.x_end - PADDLE_SIZE // 2:
+                if self.ball.pos[0] <= self.paddle.x_end - self.paddle_size // 2:
                     self.ball.vel = [-1, -1]
                 else:
                     self.ball.vel = [1, -1]
@@ -124,7 +125,7 @@ class BreakoutEnv(EnvInterface):
             done = False
 
         # state, reward, done
-        return self._get_state(), reward, done
+        return self.get_state(), reward, done, None
 
     def screenshot(self):
         arr = np.zeros([HEIGHT, WIDTH, 3], dtype=np.uint8)

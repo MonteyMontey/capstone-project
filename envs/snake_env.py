@@ -63,7 +63,7 @@ class SnakeEnv:
         self._spawn_snake()
         self._spawn_food()
 
-        return self._get_state()
+        return self.get_state()
 
     def step(self, action: Action):
         next_cell = self._snake.next_cell(action)
@@ -82,9 +82,9 @@ class SnakeEnv:
                 self._snake.move(action)
                 reward = -0.1
 
-        return self._get_state(), reward, done, self._score
+        return self.get_state(), reward, done, self._score
 
-    def _get_state(self):
+    def get_state(self):
         snake_head = self._snake.cells[0]
 
         food_distance_x, food_distance_y = np.subtract(snake_head, self._food_cell)

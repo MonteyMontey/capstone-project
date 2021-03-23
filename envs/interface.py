@@ -11,3 +11,6 @@ class EnvInterface:
 
     def screenshot(self) -> object:
         pass
+
+    def get_state(self) -> object:
+        pass

@@ -7,19 +7,20 @@ import torch.nn.functional as F
 import torch.nn as nn
 import torch.optim as optim
 
-from .replay_memory import ReplayBuffer
+from .continuous_replay_memory import ReplayBuffer
 from .interface import AlgInterface
 
 
 class DDPGAgent(AlgInterface):
-    def __init__(self, alpha, beta, gamma, batch_size, fc1_dims, fc2_dims, input_dim, output_dim, mem_size, tau):
+    def __init__(self, alpha, beta, gamma, batch_size, tau, fc1_dims, fc2_dims, input_dim, output_dim,
+                 mem_size=1_000_000):
         self.gamma = gamma
         self.tau = tau
         self.batch_size = batch_size
         self.alpha = alpha
         self.beta = beta
 
-        self.memory = ReplayBuffer(mem_size, input_dim)
+        self.memory = ReplayBuffer(mem_size, input_dim, output_dim)
 
         self.noise = OUActionNoise(mu=np.zeros(output_dim))
 
@@ -114,9 +115,6 @@ class CriticNetwork(nn.Module):
         self.fc1 = nn.Linear(self.input_dims, self.fc1_dims)
         self.fc2 = nn.Linear(self.fc1_dims, self.fc2_dims)
 
-        self.bn1 = nn.LayerNorm(self.fc1_dims)
-        self.bn2 = nn.LayerNorm(self.fc2_dims)
-
         self.action_value = nn.Linear(self.n_actions, self.fc2_dims)
 
         self.q = nn.Linear(self.fc2_dims, 1)
@@ -143,11 +141,8 @@ class CriticNetwork(nn.Module):
         self.to(self.device)
 
     def forward(self, state, action):
-        state_value = self.fc1(state)
-        state_value = self.bn1(state_value)
-        state_value = F.relu(state_value)
+        state_value = F.relu(self.fc1(state))
         state_value = self.fc2(state_value)
-        state_value = self.bn2(state_value)
         action_value = self.action_value(action)
         state_action_value = F.relu(T.add(state_value, action_value))
         state_action_value = self.q(state_action_value)
@@ -165,9 +160,6 @@ class ActorNetwork(nn.Module):
 
         self.fc1 = nn.Linear(self.input_dims, fc1_dims)
         self.fc2 = nn.Linear(self.fc1_dims, self.fc2_dims)
-
-        self.bn1 = nn.LayerNorm(self.fc1_dims)
-        self.bn2 = nn.LayerNorm(self.fc2_dims)
 
         self.mu = nn.Linear(self.fc2_dims, self.n_actions)
 
@@ -189,12 +181,8 @@ class ActorNetwork(nn.Module):
         self.to(self.device)
 
     def forward(self, state):
-        x = self.fc1(state)
-        x = self.bn1(x)
-        x = F.relu(x)
-        x = self.fc2(x)
-        x = self.bn2(x)
-        x = F.relu(x)
+        x = F.relu(self.fc1(state))
+        x = F.relu(self.fc2(x))
         x = T.tanh(self.mu(x))
 
         return x

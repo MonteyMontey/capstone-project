@@ -7,13 +7,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
-from .replay_memory import ReplayBuffer
+from .discrete_replay_memory import ReplayBuffer
 from .interface import AlgInterface
 
 
 class DuelingDDQNAgent(AlgInterface):
-    def __init__(self, lr, gamma, batch_size, epsilon, eps_dec, eps_min, fc1_dim, fc2_dim, input_dim=11, output_dim=4,
-                 mem_size=1_000_000, tau=0.01):
+    def __init__(self, lr, gamma, batch_size, epsilon, eps_dec, eps_min, tau, fc1_dim, fc2_dim, input_dim, output_dim,
+                 mem_size=1_000_000):
         self.gamma = gamma
         self.epsilon = epsilon
         self.lr = lr

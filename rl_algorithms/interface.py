@@ -1,6 +1,8 @@
-class AlgInterface:
+import numpy as np
 
-    def choose_action(self, observation: list) -> object:
+
+class AlgInterface:
+    def choose_action(self, observation: list) -> np.ndarray:
         pass
 
     def remember(self, state: list, action: object, reward: float, state_: list, done: bool) -> None:

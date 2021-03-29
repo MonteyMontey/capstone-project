@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.distributions import Normal
 
-from .continuous_replay_memory import ReplayBuffer
+from rl_algorithms.replay_memory.continuous_replay_memory import ReplayBuffer
 from .interface import AlgInterface
 
 

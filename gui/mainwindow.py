@@ -123,6 +123,7 @@ class Ui_GUI(object):
         self.label.setObjectName("label")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label)
         self.gridSizeComboBox = QtWidgets.QComboBox(self.snake_config_page)
+        self.gridSizeComboBox.setMaxVisibleItems(8)
         self.gridSizeComboBox.setObjectName("gridSizeComboBox")
         self.gridSizeComboBox.addItem("")
         self.gridSizeComboBox.addItem("")
@@ -474,8 +475,8 @@ class Ui_GUI(object):
 
         self.retranslateUi(GUI)
         self.envStackedWidget.setCurrentIndex(0)
-        self.gridSizeComboBox.setCurrentIndex(0)
-        self.snakeVisionComboBox.setCurrentIndex(0)
+        self.gridSizeComboBox.setCurrentIndex(1)
+        self.snakeVisionComboBox.setCurrentIndex(1)
         self.algStackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(GUI)
 

@@ -5,6 +5,9 @@ from PyQt5.QtCore import pyqtSignal, QRunnable, QObject
 from PyQt5.QtWidgets import QApplication
 
 from envs.action import Action
+
+from .utils import RenderMode
+
 from rl_algorithms.dddqn import DuelingDDQNAgent
 from rl_algorithms.ddpg import DDPGAgent
 from rl_algorithms.sac import SACAgent
@@ -18,7 +21,7 @@ BREAKOUT_OUTPUT_TO_ACTION = [Action.LEFT, Action.RIGHT]
 PONG_OUTPUT_TO_ACTION = [Action.UP, Action.DOWN]
 
 
-class Worker(QRunnable):
+class RLThread(QRunnable):
     def __init__(self, window, alg, alg_config):
         super(QRunnable, self).__init__()
         self.window = window
@@ -28,7 +31,7 @@ class Worker(QRunnable):
         self.pause = False
         self.stop = False
 
-        self.signals = WorkerSignals()
+        self.signals = RLThreadSignals()
 
     def run(self):
         input_dim = len(self.window.env.get_state())
@@ -79,28 +82,26 @@ class Worker(QRunnable):
 
                     state = state_
 
-                    if self.window.render_mode != 3:
-                        # noinspection PyUnresolvedReferences
+                    if self.window.render_mode != RenderMode.NO_RENDER:
                         self.signals.update_env.emit()
                         QApplication.processEvents()
 
-                    if self.window.render_mode == 1:
+                    if self.window.render_mode == RenderMode.SLOW_RENDER:
                         time.sleep(0.5)
-                    elif self.window.render_mode == 2:
+                    elif self.window.render_mode == RenderMode.FAST_RENDER:
                         time.sleep(0.05)
-                    else:
+                    elif self.window.render_mode == RenderMode.NO_RENDER:
                         time.sleep(0.001)
 
             score_history.append(score)
             x = [j + 1 for j in range(episode)]
 
-            # noinspection PyUnresolvedReferences
             self.signals.update_learning_graph.emit((score_history, x))
 
             if self.stop:
                 break
 
 
-class WorkerSignals(QObject):
+class RLThreadSignals(QObject):
     update_env = pyqtSignal()
     update_learning_graph = pyqtSignal(tuple)

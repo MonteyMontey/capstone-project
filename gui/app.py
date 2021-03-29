@@ -2,7 +2,7 @@ import numpy as np
 
 from PyQt5.QtCore import pyqtSlot, QThreadPool
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QMainWindow, QGraphicsScene
+from PyQt5.QtWidgets import QMainWindow, QGraphicsScene, QApplication
 
 from envs.breakout_env import BreakoutEnv
 from envs.pong_env import PongEnv

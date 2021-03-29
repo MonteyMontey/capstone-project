@@ -1,8 +1,7 @@
 import time
 import numpy as np
 
-from PyQt5.QtCore import pyqtSignal, QRunnable, QObject
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import pyqtSignal, QRunnable, QObject, QTimer
 
 from envs.action import Action
 
@@ -31,7 +30,15 @@ class RLThread(QRunnable):
         self.pause = False
         self.stop = False
 
+        self.score_history = []
+        self.x = []
+
         self.signals = RLThreadSignals()
+
+        self.timer = QTimer()
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.update_learning_curve)
+        self.timer.start()
 
     def run(self):
         input_dim = len(self.window.env.get_state())
@@ -41,7 +48,6 @@ class RLThread(QRunnable):
 
         rl_agent = ALG_NAME_TO_OBJECT[self.alg](*self.alg_config, input_dim, output_dim)
 
-        scores, score_history = [], []
         episode = 0
 
         while True:
@@ -84,7 +90,6 @@ class RLThread(QRunnable):
 
                     if self.window.render_mode != RenderMode.NO_RENDER:
                         self.signals.update_env.emit()
-                        QApplication.processEvents()
 
                     if self.window.render_mode == RenderMode.SLOW_RENDER:
                         time.sleep(0.5)
@@ -93,13 +98,14 @@ class RLThread(QRunnable):
                     elif self.window.render_mode == RenderMode.NO_RENDER:
                         time.sleep(0.001)
 
-            score_history.append(score)
-            x = [j + 1 for j in range(episode)]
-
-            self.signals.update_learning_graph.emit((score_history, x))
+            self.score_history.append(score)
+            self.x = [j + 1 for j in range(episode)]
 
             if self.stop:
                 break
+
+    def update_learning_curve(self):
+        self.signals.update_learning_graph.emit((self.score_history, self.x))
 
 
 class RLThreadSignals(QObject):

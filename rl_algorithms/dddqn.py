@@ -26,8 +26,8 @@ class DuelingDDQNAgent(AlgInterface):
 
         self.memory = ReplayBuffer(mem_size, input_dim)
 
-        self.q_eval = DuelingDeepQNetwork(self.lr, input_dim, fc1_dim, fc2_dim, output_dim)
-        self.q_next = DuelingDeepQNetwork(self.lr, input_dim, fc1_dim, fc2_dim, output_dim)
+        self.q_eval = DuelingDeepQNetwork(self.lr, input_dim, output_dim, fc1_dim, fc2_dim)
+        self.q_next = DuelingDeepQNetwork(self.lr, input_dim, output_dim, fc1_dim, fc2_dim)
 
         self._update_network_parameters(tau=1)
 

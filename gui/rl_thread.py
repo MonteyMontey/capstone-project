@@ -2,6 +2,7 @@ import time
 import numpy as np
 
 from PyQt5.QtCore import pyqtSignal, QRunnable, QObject, QTimer
+from PyQt5.QtWidgets import QApplication
 
 from envs.action import Action
 
@@ -64,7 +65,7 @@ class RLThread(QRunnable):
                 if self.stop:
                     break
                 elif self.pause:
-                    pass
+                    QApplication.processEvents()
                 else:
                     action = rl_agent.choose_action(state)
 

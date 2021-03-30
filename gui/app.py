@@ -101,6 +101,7 @@ class MainWindow(QMainWindow):
     def stop_training(self):
         self.rl_thread.stop = True
         self._gui_training_mode(False)
+        self.ui.pauseButton.setText("Pause")
         self.ui.pauseButton.setDisabled(True)
         self.ui.stopButton.setDisabled(True)
 

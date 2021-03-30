@@ -2,7 +2,7 @@ import numpy as np
 
 from PyQt5.QtCore import pyqtSlot, QThreadPool
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QMainWindow, QGraphicsScene, QApplication
+from PyQt5.QtWidgets import QMainWindow, QGraphicsScene, QApplication, QFileDialog
 
 from envs.breakout_env import BreakoutEnv
 from envs.pong_env import PongEnv
@@ -69,6 +69,8 @@ class MainWindow(QMainWindow):
     def start_training(self):
         self._gui_training_mode(True)
 
+        self.ui.actionSaveModel.setEnabled(True)
+
         self.ui.pauseButton.setEnabled(True)
         self.ui.stopButton.setEnabled(True)
 
@@ -116,6 +118,16 @@ class MainWindow(QMainWindow):
     @pyqtSlot()
     def no_render(self):
         self.render_mode = RenderMode.NO_RENDER
+
+    @pyqtSlot()
+    def save_model(self):
+        # TODO: implement model saving
+        pass
+
+    @pyqtSlot()
+    def load_model(self):
+        # TODO: implement model loading
+        pass
 
     def init_env(self, name):
         if name == "Snake":
@@ -169,12 +181,17 @@ class MainWindow(QMainWindow):
         self.ui.snakeVisionComboBox.currentIndexChanged.connect(self.snake_env_config_changed)
         self.ui.paddleSizeSpinBox.valueChanged.connect(self.breakout_env_config_changed)
         self.ui.algComboBox.currentTextChanged.connect(self.alg_changed)
+
         self.ui.startButton.clicked.connect(self.start_training)
         self.ui.pauseButton.clicked.connect(self.pause_training)
         self.ui.stopButton.clicked.connect(self.stop_training)
+
         self.ui.slowRenderingCheckBox.clicked.connect(self.slow_render)
         self.ui.fastRenderingCheckBox.clicked.connect(self.fast_render)
         self.ui.noRenderingCheckBox.clicked.connect(self.no_render)
+
+        self.ui.actionSaveModel.triggered.connect(self.save_model)
+        self.ui.actionLoadModel.triggered.connect(self.load_model)
 
     def _swap_env_configs(self, env_name):
         env_stacked_widget = self.ui.envStackedWidget

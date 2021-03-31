@@ -1,7 +1,6 @@
 import random
 import numpy as np
 
-from .interface import EnvInterface
 from .action import Action
 
 
@@ -31,7 +30,7 @@ class Paddle:
             self.pos += 1
 
 
-class PongEnv(EnvInterface):
+class PongEnv:
     def __init__(self):
         self.ball = None
         self.left_paddle = None
@@ -44,13 +43,19 @@ class PongEnv(EnvInterface):
 
         return self.get_state()
 
-    def step(self, action: Action):
+    def step(self, action):
+        left_action, right_action = action
         reward = 0
 
-        if action == Action.UP:
+        if left_action == Action.UP:
             self.left_paddle.up()
-        elif action == Action.DOWN:
+        elif left_action == Action.DOWN:
             self.left_paddle.down()
+
+        if right_action == Action.UP:
+            self.right_paddle.up()
+        elif right_action == Action.DOWN:
+            self.right_paddle.down()
 
         if (self.ball.pos[1] == 0 and self.ball.vel[1] == -1) or (self.ball.pos[1] == 8 and self.ball.vel[1] == 1):
             self.ball.vel[1] *= -1
@@ -66,13 +71,7 @@ class PongEnv(EnvInterface):
 
         self.ball.move()
 
-        if self.right_paddle.pos < self.ball.pos[1]:
-            self.right_paddle.down()
-
-        elif self.right_paddle.pos > self.ball.pos[1]:
-            self.right_paddle.up()
-
-        if self.ball.pos[0] == 0:
+        if self.ball.pos[0] == 0 or self.ball.pos[0] == 15:
             reward -= 1
             done = True
         else:
@@ -99,4 +98,4 @@ class PongEnv(EnvInterface):
         return arr
 
     def get_state(self):
-        return [self.left_paddle.pos / 9, self.ball.pos[0] / 16, self.ball.pos[1] / 9]
+        return [self.left_paddle.pos / 9, self.ball.pos[0] / 16, self.ball.pos[1] / 9, self.right_paddle.pos / 9]

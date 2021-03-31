@@ -14,11 +14,12 @@ from rl_algorithms.sac import SACAgent
 
 ALG_NAME_TO_OBJECT = {"DDDQN": DuelingDDQNAgent, "DDPG": DDPGAgent, "SAC": SACAgent}
 
-ENV_OUTPUT_DIMS = {"Snake": 4, "Breakout": 2, "Pong": 2}
+ENV_OUTPUT_DIMS = {"Snake": 4, "Breakout": 2, "Pong": 4}
 
 SNAKE_OUTPUT_TO_ACTION = [Action.UP, Action.RIGHT, Action.DOWN, Action.LEFT]
 BREAKOUT_OUTPUT_TO_ACTION = [Action.LEFT, Action.RIGHT]
-PONG_OUTPUT_TO_ACTION = [Action.UP, Action.DOWN]
+PONG_OUTPUT_TO_ACTION = [(Action.UP, Action.UP), (Action.UP, Action.DOWN), (Action.DOWN, Action.UP),
+                         (Action.DOWN, Action.DOWN)]
 
 
 class RLThread(QRunnable):

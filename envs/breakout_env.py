@@ -20,33 +20,43 @@ COLORS = [RED, ORANGE, YELLOW, GREEN, LIGHT_BLUE, BLUE]
 
 
 class Ball:
+    """The Ball class is responsible for the ball movement"""
+
     def __init__(self):
         self.pos = [random.choice(range(0, WIDTH)), SPACE_TOP + N_LAYERS + 1]
         self.vel = random.choice([[-1, 1], [1, 1]])
 
     def move(self):
+        """Moves the ball in the direction of the velocity"""
         self.pos[0] += self.vel[0]
         self.pos[1] += self.vel[1]
 
 
 class Paddle:
+    """The Paddle class is responsible for the paddle movement"""
+
     def __init__(self, size):
         self.y_pos = HEIGHT - 1
         self.x_start = WIDTH // 2 - size // 2
         self.x_end = self.x_start + size - 1
 
     def right(self):
+        """Moves the paddle on cell to the right"""
         if self.x_end != WIDTH - 1:
             self.x_end += 1
             self.x_start += 1
 
     def left(self):
+        """Moves the paddle on cell to the left"""
         if self.x_start != 0:
             self.x_start -= 1
             self.x_end -= 1
 
 
 class BreakoutEnv(EnvInterface):
+    """The BreakoutEnv class provides the logic of the Breakout environment as well as all necessary methods to connect
+    with the reinforcement learning agents."""
+
     def __init__(self, paddle_size):
         self.paddle_size = paddle_size
 
@@ -55,6 +65,7 @@ class BreakoutEnv(EnvInterface):
         self.blocks = None
 
     def reset(self):
+        """Resets the environment"""
         self.blocks = np.zeros(shape=(N_LAYERS, WIDTH))
         self.ball = Ball()
         self.paddle = Paddle(self.paddle_size)
@@ -62,10 +73,18 @@ class BreakoutEnv(EnvInterface):
         return self.get_state()
 
     def get_state(self):
+        """Returns the state of the environment which consists of the paddle position and the ball position"""
         return [self.paddle.x_start / (WIDTH - 1), self.paddle.x_end / (WIDTH - 1),
                 self.ball.pos[0] / (WIDTH - 1), self.ball.pos[1] / (HEIGHT - 1)]
 
     def step(self, action: Action):
+        """Executes the action in the environment
+
+        Returns:
+            state: The new state of the environment after the action was executed.
+            reward: The reward for the executed action.
+            done: done = True if snake dies, else done = False.
+        """
         reward = 0
 
         if action == Action.RIGHT:
@@ -128,6 +147,7 @@ class BreakoutEnv(EnvInterface):
         return self.get_state(), reward, done, None
 
     def screenshot(self):
+        """Returns a screenshot of the environment as a numpy array"""
         arr = np.zeros([HEIGHT, WIDTH, 3], dtype=np.uint8)
 
         for row_idx, row in enumerate(self.blocks):

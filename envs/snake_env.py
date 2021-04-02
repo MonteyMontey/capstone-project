@@ -77,7 +77,7 @@ class SnakeEnv:
                 self._snake.grow(action)
                 self._score += 1
                 self._spawn_food()
-                reward = 1
+                reward = 10
             else:
                 self._snake.move(action)
                 reward = -0.1

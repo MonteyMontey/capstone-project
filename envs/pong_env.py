@@ -5,6 +5,8 @@ from .action import Action
 
 
 class Ball:
+    """The Ball class is responsible for the ball movement based on action input"""
+
     def __init__(self):
         self.pos = [random.choice(range(3, 13)), random.choice(range(9))]
         if self.pos[0] < 8:
@@ -13,30 +15,39 @@ class Ball:
             self.vel = random.choice([[-1, 1], [-1, -1]])
 
     def move(self):
+        """Moves the ball in the direction of the velocity"""
         self.pos[0] += self.vel[0]
         self.pos[1] += self.vel[1]
 
 
 class Paddle:
+    """The Paddle class is responsible for the paddle movement based on action input"""
+
     def __init__(self):
         self.pos = 4
 
     def up(self):
+        """Moves the paddle one cell up"""
         if self.pos != 1:
             self.pos -= 1
 
     def down(self):
+        """Moves the paddle one cell down"""
         if self.pos != 7:
             self.pos += 1
 
 
 class PongEnv:
+    """The PongEnv class provides the logic of the Pong environment as well as all necessary methods to connect
+            with the reinforcement learning agents."""
+
     def __init__(self):
         self.ball = None
         self.left_paddle = None
         self.right_paddle = None
 
     def reset(self):
+        """Resets the environment"""
         self.ball = Ball()
         self.left_paddle = Paddle()
         self.right_paddle = Paddle()
@@ -44,6 +55,13 @@ class PongEnv:
         return self.get_state()
 
     def step(self, action):
+        """Executes the action in the environment
+
+        Returns:
+            state: The new state of the environment after the action was executed.
+            reward: The reward for the executed action.
+            done: done = True if snake dies, else done = False.
+        """
         left_action, right_action = action
         reward = 0
 
@@ -80,6 +98,7 @@ class PongEnv:
         return self.get_state(), reward, done, None
 
     def screenshot(self):
+        """Returns a screenshot of the environment as a numpy array"""
         arr = np.zeros([9, 16, 3], dtype=np.uint8)
         arr[:] = (0, 0, 0)
 
@@ -98,4 +117,6 @@ class PongEnv:
         return arr
 
     def get_state(self):
+        """Returns the state of the environment which consists of the left paddle position, the ball position, and the
+            right paddle position"""
         return [self.left_paddle.pos / 9, self.ball.pos[0] / 16, self.ball.pos[1] / 9, self.right_paddle.pos / 9]

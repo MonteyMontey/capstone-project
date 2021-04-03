@@ -8,6 +8,7 @@ class RenderMode(Enum):
 
 
 def get_dddqn_config(window):
+    """Compiles the set DDDQN configs by the user"""
     return [window.ui.learningRateDoubleSpinBoxDDDQN.value(),
             window.ui.gammaDoubleSpinBoxDDDQN.value(),
             window.ui.batchSizeSpinBoxDDDQN.value(),
@@ -20,6 +21,7 @@ def get_dddqn_config(window):
 
 
 def get_ddpg_config(window):
+    """Compiles the set DDPG configs by the user"""
     return [window.ui.learningRateAlphaDoubleSpinBoxDDPG.value(),
             window.ui.learningRateBetaDoubleSpinBoxDDPG.value(),
             window.ui.gammaDoubleSpinBoxDDPG.value(),
@@ -30,6 +32,7 @@ def get_ddpg_config(window):
 
 
 def get_sac_config(window):
+    """Compiles the set SAC configs by the user"""
     return [window.ui.learningRateAlphaDoubleSpinBoxSAC.value(),
             window.ui.learningRateBetaDoubleSpinBoxSAC.value(),
             window.ui.gammaDoubleSpinBoxSAC.value(),
@@ -41,6 +44,7 @@ def get_sac_config(window):
 
 
 def get_snake_env_config(window):
+    """Compiles the set Snake environment configs by the user"""
     grid_size_index = window.ui.gridSizeComboBox.currentIndex()
     grid_size = [5, 7, 9][grid_size_index]
 

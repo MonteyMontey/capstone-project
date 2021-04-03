@@ -21,6 +21,8 @@ ENV_NAME_TO_ZOOM = {"SnakeEnv": 34, "BreakoutEnv": 12, "PongEnv": 32}
 
 
 class MainWindow(QMainWindow):
+    """The MainWindow class represents the graphical GUI and contains its contents"""
+
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_GUI()
@@ -118,6 +120,11 @@ class MainWindow(QMainWindow):
         self.render_mode = RenderMode.NO_RENDER
 
     def init_env(self, name):
+        """Initiates the selected environment
+
+        Args:
+            name (str): The name of the environment"""
+
         if name == "Snake":
             config = get_snake_env_config(self)
             self.env = SnakeEnv(*config)
@@ -130,6 +137,11 @@ class MainWindow(QMainWindow):
         self.env.reset()
 
     def _gui_training_mode(self, on: bool):
+        """Enables or disables the GUI's training mode
+
+        Args:
+            on (bool): If True: training mode is enabled, if False: training mode is disabled"""
+
         self.ui.envComboBox.setDisabled(on)
         self.ui.envStackedWidget.setDisabled(on)
         self.ui.algComboBox.setDisabled(on)
@@ -137,6 +149,11 @@ class MainWindow(QMainWindow):
         self.ui.startButton.setDisabled(on)
 
     def _update_learning_curve_canvas(self, data):
+        """Updates the learning curve canvas
+
+        Args:
+            data: The data points for the x and y axis of the plot"""
+
         score_history = data[0]
         x = data[1]
 
@@ -151,6 +168,7 @@ class MainWindow(QMainWindow):
         self.ui.mplWidget.canvas.draw()
 
     def _update_env_canvas(self):
+        """Updates the display of the environment"""
         zoom = ENV_NAME_TO_ZOOM[self.env.__class__.__name__]
 
         img = self.env.screenshot().repeat(zoom, axis=0).repeat(zoom, axis=1)
@@ -163,6 +181,7 @@ class MainWindow(QMainWindow):
         self.ui.envView.setScene(scene)
 
     def _setup_triggers(self):
+        """Connects the GUI elements to the corresponding methods"""
         self.ui.envComboBox.currentTextChanged.connect(self.env_changed)
         self.ui.gridSizeComboBox.currentIndexChanged.connect(self.update_snake_vision_selections)
         self.ui.gridSizeComboBox.currentIndexChanged.connect(self.snake_env_config_changed)
@@ -177,6 +196,7 @@ class MainWindow(QMainWindow):
         self.ui.noRenderingCheckBox.clicked.connect(self.no_render)
 
     def _swap_env_configs(self, env_name):
+        """Changes the displayed environment configs when a different environment is selected"""
         env_stacked_widget = self.ui.envStackedWidget
 
         if env_name == "Snake":
@@ -187,6 +207,7 @@ class MainWindow(QMainWindow):
             env_stacked_widget.setCurrentIndex(2)
 
     def _swap_alg_configs(self, alg_name):
+        """Changes the displayed algorithm configs when a different algorithm is selected"""
         alg_stacked_widget = self.ui.algStackedWidget
 
         if alg_name == "DDDQN":

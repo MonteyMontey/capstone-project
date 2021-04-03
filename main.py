@@ -10,9 +10,8 @@ if __name__ == "__main__":
 
 
     def my_exception_hook(exctype, value, traceback):
-        # Print the error and traceback
+        """Custom exception hook to print full error traceback"""
         print(exctype, value, traceback)
-        # Call the normal Exception hook after
         sys._excepthook(exctype, value, traceback)
         sys.exit(1)
 

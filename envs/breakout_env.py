@@ -85,9 +85,9 @@ class BreakoutEnv(EnvInterface):
         """Executes the action in the environment
 
         Returns:
-            state: The new state of the environment after the action was executed.
-            reward: The reward for the executed action.
-            done: done = True if snake dies, else done = False.
+            state (list[float]): The new state of the environment after the action was executed.
+            reward (float): The reward for the executed action.
+            done (bool): done = True if game over, else done = False.
         """
         reward = 0
 

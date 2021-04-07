@@ -98,10 +98,10 @@ class SnakeEnv(EnvInterface):
         """Executes the action in the environment
 
         Returns:
-            state: The new state of the environment after the action was executed.
-            reward: The reward for the executed action.
-            done: done = True if snake dies, else done = False.
-            score: How many pieces of food the snake ate so far.
+            state (list[float]): The new state of the environment after the action was executed.
+            reward (float): The reward for the executed action.
+            done (bool): done = True if snake dies, else done = False.
+            score (int): How many pieces of food the snake ate so far.
         """
 
         next_cell = self._snake.next_cell(action)

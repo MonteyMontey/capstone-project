@@ -3,7 +3,8 @@ import numpy as np
 
 from .action import Action
 
-PONG_ACTION_POOL = [(Action.UP, Action.UP), (Action.UP, Action.DOWN), (Action.DOWN, Action.UP), (Action.DOWN, Action.DOWN)]
+PONG_ACTION_POOL = [(Action.UP, Action.UP), (Action.UP, Action.DOWN), (Action.DOWN, Action.UP),
+                    (Action.DOWN, Action.DOWN)]
 
 
 class Ball:
@@ -62,9 +63,9 @@ class PongEnv:
         """Executes the action in the environment
 
         Returns:
-            state: The new state of the environment after the action was executed.
-            reward: The reward for the executed action.
-            done: done = True if snake dies, else done = False.
+            state (list[float]): The new state of the environment after the action was executed.
+            reward (float): The reward for the executed action.
+            done (bool): done = True if snake dies, else done = False.
         """
         left_action, right_action = action
         reward = 0

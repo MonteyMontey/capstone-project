@@ -21,18 +21,18 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1100</width>
-    <height>900</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1100</width>
-    <height>900</height>
+    <width>4096</width>
+    <height>2160</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>Capstone Project</string>
+   <string>Reinforcement Learning Sandbox (Alpha)</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -983,36 +983,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1100</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>Model</string>
-    </property>
-    <addaction name="actionSaveModel"/>
-    <addaction name="actionLoadModel"/>
-   </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>About</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuDocumentation">
-    <property name="title">
-     <string>Documentation</string>
-    </property>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuDocumentation"/>
-   <addaction name="menuAbout"/>
-  </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionSaveModel">
    <property name="enabled">
@@ -1047,3 +1017,4 @@
   <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>
+ 

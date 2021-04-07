@@ -4,6 +4,8 @@ from typing import List, Tuple
 from .interface import EnvInterface
 from .action import Action
 
+SNAKE_ACTION_POOL = [Action.UP, Action.RIGHT, Action.DOWN, Action.LEFT]
+
 
 class Snake:
     """
@@ -81,6 +83,8 @@ class SnakeEnv(EnvInterface):
         self._score = None
         self._snake = None
         self._food_cell = None
+
+        self.output_dim = 4
 
     def reset(self):
         """Resets the environment"""

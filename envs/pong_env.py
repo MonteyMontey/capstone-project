@@ -3,6 +3,8 @@ import numpy as np
 
 from .action import Action
 
+PONG_ACTION_POOL = [(Action.UP, Action.UP), (Action.UP, Action.DOWN), (Action.DOWN, Action.UP), (Action.DOWN, Action.DOWN)]
+
 
 class Ball:
     """The Ball class is responsible for the ball movement based on action input"""
@@ -42,6 +44,8 @@ class PongEnv:
             with the reinforcement learning agents."""
 
     def __init__(self):
+        self.output_dim = 4
+
         self.ball = None
         self.left_paddle = None
         self.right_paddle = None

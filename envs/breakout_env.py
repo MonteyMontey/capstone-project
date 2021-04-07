@@ -18,6 +18,8 @@ SPACE_TOP = 4
 N_LAYERS = 6
 COLORS = [RED, ORANGE, YELLOW, GREEN, LIGHT_BLUE, BLUE]
 
+BREAKOUT_ACTION_POOL = [Action.LEFT, Action.RIGHT]
+
 
 class Ball:
     """The Ball class is responsible for the ball movement"""
@@ -59,6 +61,8 @@ class BreakoutEnv(EnvInterface):
 
     def __init__(self, paddle_size):
         self.paddle_size = paddle_size
+
+        self.output_dim = 2
 
         self.paddle = None
         self.ball = None

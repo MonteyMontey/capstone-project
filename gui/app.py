@@ -2,7 +2,7 @@ import numpy as np
 
 from PyQt5.QtCore import pyqtSlot, QThreadPool
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QMainWindow, QGraphicsScene, QApplication
+from PyQt5.QtWidgets import QMainWindow, QGraphicsScene
 
 from envs.breakout_env import BreakoutEnv
 from envs.pong_env import PongEnv
@@ -12,7 +12,7 @@ from envs.interface import EnvInterface
 from .utils import RenderMode
 from .utils import get_dddqn_config, get_ddpg_config, get_sac_config
 from .utils import get_snake_env_config
-from .rl_thread import RLThread
+from rl_thread import RLThread
 
 from gui.mainwindow import Ui_GUI
 

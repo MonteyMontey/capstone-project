@@ -114,8 +114,11 @@ class SnakeEnv(EnvInterface):
             if next_cell == self._food_cell:
                 self._snake.grow(action)
                 self._score += 1
-                self._spawn_food()
-                reward = 10
+                if not self._spawn_food():
+                    done = True
+                    reward = 100
+                else:
+                    reward = 10
             else:
                 self._snake.move(action)
                 reward = -0.1
@@ -182,9 +185,13 @@ class SnakeEnv(EnvInterface):
         self._snake = Snake(snake_cells)
 
     def _spawn_food(self):
-        """Spawns the food in the environment"""
+        """Spawns the food in the environment. True if food is spawned, False if food couldn't be spawned"""
         available_cells = list(self._grid.difference(self._snake.cell_lookup))
-        self._food_cell = available_cells[np.random.choice(len(available_cells))]
+        if len(available_cells) > 0:
+            self._food_cell = available_cells[np.random.choice(len(available_cells))]
+            return True
+        else:
+            return False
 
     def _make_grid(self):
         """Creates the environment grid"""

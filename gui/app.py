@@ -162,8 +162,8 @@ class MainWindow(QMainWindow):
             running_avg[i] = np.mean(score_history[max(0, i - 100):(i + 1)])
 
         self.ui.mplWidget.canvas.ax.cla()
-        self.ui.mplWidget.canvas.ax.set_ylabel('average score')
-        self.ui.mplWidget.canvas.ax.set_xlabel('episodes')
+        self.ui.mplWidget.canvas.ax.set_ylabel('Average Episode Reward')
+        self.ui.mplWidget.canvas.ax.set_xlabel('Episodes')
         self.ui.mplWidget.canvas.ax.plot(x, running_avg, '#3399FF')
         self.ui.mplWidget.canvas.draw()
 

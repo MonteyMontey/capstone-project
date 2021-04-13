@@ -46,7 +46,8 @@ class RLThread(QRunnable):
 
         env_name = self.window.ui.envComboBox.currentText()
 
-        rl_agent = ALG_NAME_TO_OBJECT[self.alg](*self.alg_config, input_dim, self.window.env.output_dim)
+        output_dim = self.window.env.output_dim if self.alg == "DDDQN" else 1
+        rl_agent = ALG_NAME_TO_OBJECT[self.alg](*self.alg_config, input_dim, output_dim)
 
         episode = 0
 
@@ -71,7 +72,11 @@ class RLThread(QRunnable):
                     if self.alg == "DDDQN":
                         action_index = action
                     elif self.alg == "DDPG" or self.alg == "SAC":
-                        action_index = np.argmax(action)
+                        # convert continuous output to discrete action
+                        for i in range(self.window.env.output_dim):
+                            if action[0] <= -1 + (i + 1) * (2 / self.window.env.output_dim):
+                                action_index = i
+                                break
 
                     # translate index output of network to Action object
                     if env_name == "Snake":

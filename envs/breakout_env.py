@@ -107,7 +107,6 @@ class BreakoutEnv(EnvInterface):
         # paddle
         if self.ball.pos[1] == HEIGHT - 2:
             if self.paddle.x_start <= self.ball.pos[0] <= self.paddle.x_end:
-                reward += 1
                 if self.ball.pos[0] <= self.paddle.x_end - self.paddle_size // 2:
                     self.ball.vel = [-1, -1]
                 else:
@@ -120,11 +119,13 @@ class BreakoutEnv(EnvInterface):
 
             # straight
             if self.blocks[ball_pos_[1] - SPACE_TOP, self.ball.pos[0]] == 0:
+                reward += 1
                 self.blocks[ball_pos_[1] - SPACE_TOP, self.ball.pos[0]] = 1
                 self.ball.vel[1] *= -1
 
             # diagonal
             elif self.blocks[ball_pos_[1] - SPACE_TOP, ball_pos_[0]] == 0:
+                reward += 1
                 self.blocks[ball_pos_[1] - SPACE_TOP, ball_pos_[0]] = 1
                 self.ball.vel[0] *= -1
                 self.ball.vel[1] *= -1

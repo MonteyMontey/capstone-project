@@ -67,12 +67,14 @@ class BreakoutEnv(EnvInterface):
         self.paddle = None
         self.ball = None
         self.blocks = None
+        self.block_hit_counter = None
 
     def reset(self):
         """Resets the environment"""
         self.blocks = np.zeros(shape=(N_LAYERS, WIDTH))
         self.ball = Ball()
         self.paddle = Paddle(self.paddle_size)
+        self.block_hit_counter = 0
 
         return self.get_state()
 
@@ -120,12 +122,14 @@ class BreakoutEnv(EnvInterface):
             # straight
             if self.blocks[ball_pos_[1] - SPACE_TOP, self.ball.pos[0]] == 0:
                 reward += 1
+                self.block_hit_counter += 1
                 self.blocks[ball_pos_[1] - SPACE_TOP, self.ball.pos[0]] = 1
                 self.ball.vel[1] *= -1
 
             # diagonal
             elif self.blocks[ball_pos_[1] - SPACE_TOP, ball_pos_[0]] == 0:
                 reward += 1
+                self.block_hit_counter += 1
                 self.blocks[ball_pos_[1] - SPACE_TOP, ball_pos_[0]] = 1
                 self.ball.vel[0] *= -1
                 self.ball.vel[1] *= -1
@@ -147,6 +151,9 @@ class BreakoutEnv(EnvInterface):
             reward -= 10
         else:
             done = False
+
+        if self.block_hit_counter == len(COLORS) * WIDTH:
+            done = True
 
         # state, reward, done
         return self.get_state(), reward, done, None

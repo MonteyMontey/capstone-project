@@ -46,7 +46,10 @@ class RLThread(QRunnable):
 
         env_name = self.window.ui.envComboBox.currentText()
 
+        # For algorithms with continuous action spaces, only one output is required, which is then later converted into
+        # a discrete action
         output_dim = self.window.env.output_dim if self.alg == "DDDQN" else 1
+
         rl_agent = ALG_NAME_TO_OBJECT[self.alg](*self.alg_config, input_dim, output_dim)
 
         episode = 0
@@ -72,6 +75,7 @@ class RLThread(QRunnable):
                     if self.alg == "DDDQN":
                         action_index = action
                     elif self.alg == "DDPG" or self.alg == "SAC":
+
                         # convert continuous output to discrete action
                         for i in range(self.window.env.output_dim):
                             if action[0] <= -1 + (i + 1) * (2 / self.window.env.output_dim):

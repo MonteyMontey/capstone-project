@@ -67,14 +67,18 @@ class BreakoutEnv(EnvInterface):
         self.paddle = None
         self.ball = None
         self.blocks = None
+
         self.block_hit_counter = None
+        self.steps_without_reward_counter = None
 
     def reset(self):
         """Resets the environment"""
         self.blocks = np.zeros(shape=(N_LAYERS, WIDTH))
         self.ball = Ball()
         self.paddle = Paddle(self.paddle_size)
+
         self.block_hit_counter = 0
+        self.steps_without_reward_counter = 0
 
         return self.get_state()
 
@@ -152,7 +156,12 @@ class BreakoutEnv(EnvInterface):
         else:
             done = False
 
-        if self.block_hit_counter == len(COLORS) * WIDTH:
+        if reward == 0:
+            self.steps_without_reward_counter += 1
+        else:
+            self.steps_without_reward_counter = 0
+
+        if self.block_hit_counter == len(COLORS) * WIDTH or self.steps_without_reward_counter > 1000:
             done = True
 
         # state, reward, done

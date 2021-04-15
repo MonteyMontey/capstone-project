@@ -91,6 +91,7 @@ class PongEnv:
         elif self.ball.pos[0] == 13:
             if self.ball.pos[1] in [self.right_paddle.pos - 1, self.right_paddle.pos, self.right_paddle.pos + 1]:
                 self.ball.vel[0] *= -1
+                reward += 1
 
         self.ball.move()
 

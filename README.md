@@ -2,6 +2,8 @@
 
 Additional documentation on the project can be found in the [wiki](https://github.com/MonteyMontey/deep-reinforcement-learning-sandbox/wiki).
 
+**Disclaimer:** The rl_algorithms folder in the repository contains code that is taken from other sources. These sources are linked at the top of the corresponding files.
+
 ## Getting Started
 
 Tested with Python 3.8 on Windows 10, macOS and Ubuntu 20.04.1 LTS. 
